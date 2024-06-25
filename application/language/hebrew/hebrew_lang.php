@@ -30,6 +30,7 @@ $lang['invoice_status_not_paid_completely']    = 'בתשלום חלקית';
 $lang['invoice_pdf_heading']                   = 'חשבונית';
 $lang['invoice_table_id_heading']              = 'מק"ט';
 $lang['invoice_table_item_heading']            = 'פריט';
+$lang['invoice_table_sku_heading']            = 'מק"ט';
 $lang['invoice_table_quantity_heading']        = 'כמות';
 $lang['invoice_table_rate_heading']            = 'מחיר יחידה';
 $lang['invoice_table_tax_heading']             = 'מס';
