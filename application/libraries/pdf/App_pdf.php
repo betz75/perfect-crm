@@ -43,7 +43,7 @@ abstract class App_pdf extends TCPDF
     public function __construct()
     {
         $this->formatArray = $this->get_format_array();
-
+        $this->languageArray['a_meta_dir'] = is_rtl() ? "rtl" : "ltr";
         parent::__construct($this->formatArray['orientation'], 'mm', $this->formatArray['format'], true, 'UTF-8', false, false);
 
         /**

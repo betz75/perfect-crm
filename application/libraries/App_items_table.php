@@ -28,7 +28,7 @@ class App_items_table extends App_items_table_template
         $html = '';
 
 
-        $descriptionItemWidth = $this->get_description_item_width();
+        $descriptionItemWidth = $this->get_description_item_width() / 2;
 
         $regularItemWidth  = $this->get_regular_items_width(6);
         $customFieldsItems = $this->get_custom_fields_for_table();
@@ -58,14 +58,15 @@ class App_items_table extends App_items_table_template
                 . $this->period_merge_field($item['description'])
                 . '</strong></span>';
 
-                if (!empty($item['long_description'])) {
-                    $itemHTML .= '<br />';
-                }
+                
             }
-            
+            $itemHTML .= '</td>';
+
             /**
              * Item long description
              */
+            $itemHTML .= '<td class="description" width="' . $descriptionItemWidth . '%">';
+
             if (!empty($item['long_description'])) {
                 $itemHTML .= '<span style="color:#424242;">' . $this->period_merge_field($item['long_description']) . '</span>';
             }
@@ -144,6 +145,7 @@ class App_items_table extends App_items_table_template
     {
         $html = '<tr>';
         $html .= '<th align="center">' . $this->number_heading() . '</th>';
+        $html .= '<th class="description" width="' . $this->get_description_item_width() . '%">' . $this->sku_heading() . '</th>';
         $html .= '<th class="description" width="' . $this->get_description_item_width() . '%">' . $this->item_heading() . '</th>';
 
         $customFieldsItems = $this->get_custom_fields_for_table();
@@ -168,13 +170,14 @@ class App_items_table extends App_items_table_template
      */
     public function pdf_headings()
     {
-        $descriptionItemWidth = $this->get_description_item_width();
+        $descriptionItemWidth = $this->get_description_item_width() / 2;
         $regularItemWidth     = $this->get_regular_items_width(6);
         $customFieldsItems    = $this->get_custom_fields_for_table();
 
         $tblhtml = '<tr height="30" bgcolor="' . get_option('pdf_table_heading_color') . '" style="color:' . get_option('pdf_table_heading_text_color') . ';">';
 
         $tblhtml .= '<th width="5%;" align="center">' . $this->number_heading() . '</th>';
+        $tblhtml .= '<th width="' . ($descriptionItemWidth) . '%" >' . $this->sku_heading() . '</th>';
         $tblhtml .= '<th width="' . $descriptionItemWidth . '%" >' . $this->item_heading() . '</th>';
 
         foreach ($customFieldsItems as $cf) {

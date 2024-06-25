@@ -405,7 +405,14 @@ abstract class App_items_table_template
     {
         return $this->headings['item'];
     }
-
+    /**
+     * Get sku heading
+     * @return string
+     */
+    public function sku_heading()
+    {
+        return $this->headings['sku'];
+    }
     /**
      * Get quantity heading
      * @return string
@@ -452,6 +459,8 @@ abstract class App_items_table_template
         $langFrom = !$alias ? $this->type : $alias;
 
         $this->headings['number'] = _l('the_number_sign', '', false);
+        $this->headings['sku'] =  _l($langFrom . '_table_sku_heading', '', false);
+
         $this->headings['item']   = _l($langFrom . '_table_item_heading', '', false);
 
         $qty_heading = _l($langFrom . '_table_quantity_heading', '', false);
@@ -483,6 +492,7 @@ abstract class App_items_table_template
 
     protected function show_tax_per_item()
     {
+        return false;
         return $this->tax_per_item && hooks()->apply_filters('show_tax_per_item', true, [
             'type'        => $this->type,
             'transaction' => $this->transaction,

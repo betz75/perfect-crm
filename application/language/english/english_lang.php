@@ -29,6 +29,7 @@ $lang['invoice_status_overdue']                = 'Overdue';
 $lang['invoice_status_not_paid_completely']    = 'Partially Paid';
 $lang['invoice_pdf_heading']                   = 'INVOICE';
 $lang['invoice_table_item_heading']            = 'Item';
+$lang['invoice_table_sku_heading']            = 'SKU';
 $lang['invoice_table_quantity_heading']        = 'Qty';
 $lang['invoice_table_rate_heading']            = 'Rate';
 $lang['invoice_table_tax_heading']             = 'Tax';
