@@ -65,12 +65,12 @@ class App_assets
     }
 
     /**
-     * Used for core js/css version
+     * Used for core js/css version (this comment is incorrect it runs all APP version not just assets)
      * @return mixed
      */
     public function core_version()
     {
-        return ENVIRONMENT == 'development' ? time() : get_app_version();
+        return ENVIRONMENT == 'development' ? time() : get_assets_version();
     }
 
     public function core_file($path, $fileName)
