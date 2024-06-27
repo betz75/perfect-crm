@@ -7257,9 +7257,9 @@ function add_item_to_table(data, itemid, merge_invoice, bill_expense) {
       item_key +
       '][rate]" value="' +
       data.rate +
-      '" class="form-control"></td>';
+    '" class="form-control"><div style="width:0;height:0" class="tw-overflow-hidden">' + tax_dropdown +'</div></td>';
 
-    table_row += '<td class="taxrate">' + tax_dropdown + "</td>";
+    table_row += '<td class="taxrate tw-hidden"></td>';
 
     table_row +=
       '<td class="amount" align="right">' +

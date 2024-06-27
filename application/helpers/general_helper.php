@@ -204,7 +204,7 @@ function generate_encryption_key()
 }
 
 /**
- * Return application version formatted
+ * Return application  version formatted
  * @return string
  */
 function get_app_version()
@@ -213,6 +213,17 @@ function get_app_version()
     $CI->load->config('migration');
 
     return wordwrap($CI->config->item('migration_version'), 1, '.', true);
+}
+/**
+ * Return application assets version formatted
+ * @return string
+ */
+function get_assets_version()
+{
+    $CI = &get_instance();
+    $CI->load->config('migration');
+
+    return wordwrap($CI->config->item('assets_version'), 1, '.', true);
 }
 
 /**
