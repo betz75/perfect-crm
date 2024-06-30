@@ -1615,6 +1615,11 @@ $lang['show_lead_reminders_on_calendar']                          = 'תזכור�
 $lang['tickets_piping']                                           = 'צנרת אימייל';
 $lang['email_piping_only_replies']                                = 'רק תשובות מותרות בדוא"ל';
 $lang['email_piping_only_registered']                             = 'תור רק על משתמשים רשומים';
+$lang['sham_system']                             = 'מערכת שע"מ';
+$lang['sham_api_key']                             = 'API Key לרשות המיסים:';
+$lang['secret_key'] = 'Secret Key';
+$lang['bounce_url'] = 'bounced url';
+
 
 # Estimates
 $lang['view_estimate_as_client']         = 'הצג אומדן כלקוח';
