@@ -5,6 +5,7 @@ use app\services\imap\Imap;
 use Ddeboer\Imap\SearchExpression;
 use Ddeboer\Imap\Search\Flag\Unseen;
 use app\services\imap\ConnectionErrorException;
+use app\services\ShaamService;
 use Ddeboer\Imap\Exception\UnexpectedEncodingException;
 use Ddeboer\Imap\Exception\UnsupportedCharsetException;
 use Ddeboer\Imap\Exception\MessageDoesNotExistException;
@@ -92,7 +93,7 @@ class Cron_model extends App_Model
             $this->delete_twocheckout_logs();
             $this->stop_task_timers();
             $this->non_billed_tasks_notification();
-
+            $this->refreshShamAccessToken();
             /**
              * Finally send any emails in the email queue - if enabled and any
              */
@@ -1955,5 +1956,11 @@ class Cron_model extends App_Model
         }
 
         return startsWith($lastError['message'], 'Maximum execution time');
+    }
+
+    private function refreshShamAccessToken() {
+        $refresh_token = get_option("refresh_token");
+        $sham_service = new ShaamService($refresh_token, "refresh_token","refresh_token");
+        $sham_service->getAccessToekn();  
     }
 }

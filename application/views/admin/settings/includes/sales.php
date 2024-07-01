@@ -360,6 +360,22 @@
                 <label for="settings[bounce_url]">
                 </label>
                 <?php echo render_input('settings[bounce_url]', 'bounce_url', get_option('bounce_url')); ?>
+                <label for="settings[access_token]">
+                </label>
+                <?php echo render_input('settings[access_token]', 'access_token', get_option('access_token')); ?>
+                <label for="settings[refresh_token]">
+                </label>
+                <?php echo render_input('settings[refresh_token]', 'refresh_token', get_option('refresh_token')); ?>
+                <label for="settings[sham_auth_end_point]">
+                </label>
+                <?php echo render_input('settings[sham_auth_end_point]', 'sham_auth_end_point', get_option('sham_auth_end_point')); ?>
+                <label for="settings[sham_api_end_point]">
+                </label>
+                <?php echo render_input('settings[sham_api_end_point]', 'sham_api_end_point', get_option('sham_api_end_point')); ?>
+                <label for="settings[sham_state_code]">
+                </label>
+                <?php echo render_input('settings[sham_state_code]', 'sham_state_code', get_option('sham_state_code')); ?>
+                <a target="_blank" href="<?= get_option('sham_auth_end_point')?>/longtimetoken/oauth2/authorize?response_type=code&client_id=<?= get_option('sham_api_key') ?>&scope=scope&state=">לאחר שמירה לחץ כאן להזדהות</a>
             </div>
         </div>
     </div>
