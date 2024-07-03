@@ -323,8 +323,10 @@ class Invoices extends AdminController
           
                 $id = $this->invoices_model->add($invoice_data);
                 $sham_number = $this->invoices_model->get($id);
-                $this->getShamInvoiceNumber($sham_number);
+         
                 if ($id) {
+                    $confirmation_code = $this->getShamInvoiceNumber($sham_number);
+                    $this->invoices_model->update(['shaam_number' => $confirmation_code], $id);
                     set_alert('success', _l('added_successfully', _l('invoice')));
                     $redUrl = admin_url('invoices/list_invoices/' . $id);
 
@@ -750,7 +752,6 @@ class Invoices extends AdminController
     }
 
     public function getShamInvoiceNumber($invoice = null) {
-        $invoice = $this->invoices_model->get(19);
         error_reporting(E_ALL);
         ini_set("display_errors", 1);
         if ($invoice->total < 25000) {
@@ -764,51 +765,52 @@ class Invoices extends AdminController
         $client = $this->clients_model->get($invoice->clientid);
         $request_data = [
             "Invoice_ID" => $invoice->number,
-            "Vat_Number" => get_option('company_vat'),
-            "Invoice_Reference_Number" => $invoice->id,
-            "Customer_VAT_Number" => $client->vat,
-            "Customer_Name" => $client->company,
+            "Vat_Number" => (int)get_option('company_vat'),
+            //"Invoice_Reference_Number" => $invoice->id,
+            "Customer_VAT_Number" => (int)$client->vat,
+            //"Customer_Name" => $client->company,
             "Invoice_Date" => $invoice->date,
             "Invoice_Issuance_Date" => date("Y-m-d", strtotime($invoice->datecreated)),
    
-            "Amount_Before_Discount" => $invoice->subtotal,
-            "Discount" => $invoice->discount_total,
-            "Payment_Amount" => $invoice->subtotal,
-            "VAT_Amount" => $invoice->total_tax,
-            "Payment_Amount_Including_VAT" => $invoice->total,
-            "Invoice_Note" => $invoice->clientnote,
-            "Delivery_Address" => $invoice->shipping_city,
+            "Amount_Before_Discount" => (float)$invoice->subtotal,
+            "Discount" => (float)$invoice->discount_total,
+            "Payment_Amount" => (float)$invoice->subtotal,
+            "VAT_Amount" => (float)$invoice->total_tax,
+            "Payment_Amount_Including_VAT" => (float)$invoice->total,
+            //"Invoice_Note" => $invoice->clientnote,
+           // "Delivery_Address" => $invoice->shipping_city,
             "Accounting_Software_Number" => 99999999,
-            "Union_Vat_Number" => 0,
+           // "Union_Vat_Number" => 0,
             "Invoice_Type" => 305,
-            "Vehicle_License_Number" => 0,
-            "Transition_Location" => 0,
-            "Additional_Information" => "",
+            //"Vehicle_License_Number" => 0,
+            //"Transition_Location" => 0,
+            //"Additional_Information" => "",
         ];
         
-        $this->db->select("*");
-        $this->db->from(db_prefix() . 'itemable');
-        $this->db->where("rel_id", $invoice->id);
-        $items = $this->db->get()->result_array();
-        $send_items = [];
-        $i = 1;
-        foreach ($items as $item) {
-            $new_item = [];
-            $new_item["Index"] = $i;
-            $new_item["Catalog_ID"] = $item['description'];
-            $new_item['Description'] = $item['long_description'];
-            $new_item['Measure_Unit_Description'] = 'יחידה';
-            $new_item['Quantity'] = $item['qty'];
-            $new_item['Price_Per_Unit'] = $item['rate'];
-            $new_item['Discount'] = 0;
-            $new_item['VAT_Rate'] = 17;
-            $new_item['VAT_Amount'] = $item['rate'] * $item['qty'] * (100 / $new_item['VAT_Rate']);
-            $send_items[] = $new_item;
-        }   
-        $request_data['Items'] = $send_items;
+        // $this->db->select("*");
+        // $this->db->from(db_prefix() . 'itemable');
+        // $this->db->where("rel_id", $invoice->id);
+        // $items = $this->db->get()->result_array();
+        // $send_items = [];
+        // $i = 1;
+        // foreach ($items as $item) {
+        //     $new_item = [];
+        //     $new_item["Index"] = $i;
+        //     $new_item["Catalog_ID"] = $item['description'];
+        //     $new_item['Description'] = $item['long_description'];
+        //     $new_item['Measure_Unit_Description'] = 'יחידה';
+        //     $new_item['Quantity'] = $item['qty'];
+        //     $new_item['Price_Per_Unit'] = $item['rate'];
+        //     $new_item['Discount'] = 0;
+        //     $new_item['VAT_Rate'] = 17;
+        //     $new_item['VAT_Amount'] = $item['rate'] * $item['qty'] * (100 / $new_item['VAT_Rate']);
+        //     $send_items[] = $new_item;
+        // }   
+        // $request_data['Items'] = $send_items;
         $access_token = get_option("access_token");
         $end_point_url = get_option("sham_api_end_point");
         $postdata = json_encode($request_data);
+        
         $opts = array('http' =>
             array(
                 'method'  => 'POST',
@@ -816,15 +818,10 @@ class Invoices extends AdminController
                 'content' => $postdata
             )
         );
-        var_dump($opts);
         $context  = stream_context_create($opts);
         $result = file_get_contents($end_point_url."/Invoices/v1/Approval", false, $context);
         $result = json_decode($result, true);
+        var_dump($result);
+        return $result['Confirmation_Number'];
     }
-
-    public function test() {
-        $refresh_token = get_option("refresh_token");
-        $sham_service = new ShaamService($refresh_token, "refresh_token","refresh_token");
-        $sham_service->getAccessToekn();    }
-
 }
