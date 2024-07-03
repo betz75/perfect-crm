@@ -1,0 +1,10 @@
+{
+    "name": "MubashirRiaz7/whatsapp",
+    "description": "WhatsApp Cloud API module",
+    "require": {
+        "netflie/whatsapp-cloud-api": "^2.2",
+        "rmccue/requests": "^2.0",
+        "firebase/php-jwt": "^6.10",
+        "openai-php/client": "^0.8.5"
+    }
+}
