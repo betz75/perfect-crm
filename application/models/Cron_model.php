@@ -1959,6 +1959,11 @@ class Cron_model extends App_Model
     }
 
     private function refreshShamAccessToken() {
+        $last_time = get_option('last_cron_run');
+        $diff = time() - $last_time;
+        if ($diff < 36000) {
+            return;
+        }
         $refresh_token = get_option("refresh_token");
         $sham_service = new ShaamService($refresh_token, "refresh_token","refresh_token");
         $sham_service->getAccessToekn();  
