@@ -91,7 +91,10 @@ $right_info = $swap == '1' ? $organization_info : $invoice_info;
 
 $pdf->writeHTML($right_info, true, false, false, false, $text_left);
 $pdf->writeHTML($left_info, true, false, false, false, $text_left);
-
+if ($invoice->shaam_number) {
+$sham = '<div style="text-align: center;">'._l("invoice_shaam_number"). " ". $invoice->shaam_number."</div>";
+$pdf->writeHTML($sham, true, false, false, false, $text_left);
+}
 // The Table
 $pdf->Ln(hooks()->apply_filters('pdf_info_and_table_separator', 6));
 

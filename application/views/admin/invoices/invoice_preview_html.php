@@ -156,7 +156,16 @@ if (isset($invoice->scheduled_email) && $invoice->scheduled_email) { ?>
             </address>
             <?php hooks()->do_action('after_left_panel_invoice_preview_template', $invoice); ?>
         </div>
+
     </div>
+    <?php if ($invoice->shaam_number) : ?>
+    <div class="row">
+                <div class="col-md-12 text-center" >
+                    <?= _l("invoice_shaam_number") ?>
+                    <?php echo $invoice->shaam_number; ?>
+                </div>
+            </div>
+            <?php endif; ?>
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
@@ -234,6 +243,7 @@ if (isset($invoice->scheduled_email) && $invoice->scheduled_email) { ?>
                             </td>
                         </tr>
                     <?php } ?>
+                  
                     <?php if (get_option('show_amount_due_on_invoice') == 1 && $invoice->status != Invoices_model::STATUS_CANCELLED) { ?>
                         <tr>
                             <td>

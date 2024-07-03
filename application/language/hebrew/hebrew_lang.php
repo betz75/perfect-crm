@@ -1621,6 +1621,7 @@ $lang['secret_key'] = 'Secret Key';
 $lang['bounce_url'] = 'bounced url';
 
 
+
 # Estimates
 $lang['view_estimate_as_client']         = 'הצג אומדן כלקוח';
 $lang['estimate_mark_as']                = 'סמן כ-%s';
@@ -1860,6 +1861,7 @@ $lang['invoice_estimate_activity_updated_item_rate']              = 'שיעור 
 $lang['invoice_estimate_activity_updated_qty_item']               = 'כמות מעודכנת על פריט <b> %s </b> מ- %s ל- %s';
 $lang['invoice_estimate_activity_added_item']                     = 'נוסף פריט חדש <b>%s </b>';
 $lang['invoice_estimate_activity_sent_to_client']                 = 'הערכה נשלחת ללקוח';
+$lang['invoice_shaam_number']                                     = 'מספר הקצאה';
 $lang['estimate_activity_client_accepted_and_converted']          = 'הלקוח קיבל את האומדן הזה. ההערכה מומר לחשבונית עם מספר %s ';
 $lang['estimate_activity_client_accepted']                        = 'הלקוח קיבל את האומדן הזה';
 $lang['estimate_activity_client_declined']                        = 'הלקוח דחה את האומדן הזה';

@@ -144,6 +144,8 @@
                         <?php hooks()->do_action('after_admin_invoice_preview_template_tab_menu_last_item', $invoice); ?>
                     </ul>
                 </div>
+          
+
             </div>
             <div class="row mtop20">
                 <div class="col-md-3">
@@ -483,7 +485,6 @@
                     <hr />
                     <?php } ?>
                 </div>
-
                 <?php hooks()->do_action('after_admin_invoice_preview_template_tab_content_last_item', $invoice); ?>
             </div>
         </div>
