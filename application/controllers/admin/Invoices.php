@@ -1,5 +1,7 @@
 <?php
 
+use app\services\ShaamService;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Invoices extends AdminController
@@ -296,7 +298,6 @@ class Invoices extends AdminController
         }
         echo json_encode($expense);
     }
-
     /* Add new invoice or update existing */
     public function invoice($id = '')
     {
@@ -319,9 +320,13 @@ class Invoices extends AdminController
                         redirect(admin_url('invoices/invoice'));
                     }
                 }
-
+          
                 $id = $this->invoices_model->add($invoice_data);
+                $sham_number = $this->invoices_model->get($id);
+         
                 if ($id) {
+                    $confirmation_code = $this->getShamInvoiceNumber($sham_number);
+                    $this->invoices_model->update(['shaam_number' => $confirmation_code], $id);
                     set_alert('success', _l('added_successfully', _l('invoice')));
                     $redUrl = admin_url('invoices/list_invoices/' . $id);
 
@@ -739,5 +744,84 @@ class Invoices extends AdminController
                 echo $duedate;
             }
         }
+    }
+    public function sham() {
+        $auth_code = $this->input->get('code');
+        $shaam_service = new ShaamService($auth_code, "authorization_code");
+        $shaam_service->getAccessToekn();
+    }
+
+    public function getShamInvoiceNumber($invoice = null) {
+        error_reporting(E_ALL);
+        ini_set("display_errors", 1);
+        if ($invoice->total < 25000) {
+            return null;
+        }
+        if ($invoice->status == Invoices_model::STATUS_DRAFT) {
+            return "exp-".rand("100000", "999999");
+
+        }
+        $this->load->model('clients_model');
+        $client = $this->clients_model->get($invoice->clientid);
+        $request_data = [
+            "Invoice_ID" => $invoice->number,
+            "Vat_Number" => (int)get_option('company_vat'),
+            //"Invoice_Reference_Number" => $invoice->id,
+            "Customer_VAT_Number" => (int)$client->vat,
+            //"Customer_Name" => $client->company,
+            "Invoice_Date" => $invoice->date,
+            "Invoice_Issuance_Date" => date("Y-m-d", strtotime($invoice->datecreated)),
+   
+            "Amount_Before_Discount" => (float)$invoice->subtotal,
+            "Discount" => (float)$invoice->discount_total,
+            "Payment_Amount" => (float)$invoice->subtotal,
+            "VAT_Amount" => (float)$invoice->total_tax,
+            "Payment_Amount_Including_VAT" => (float)$invoice->total,
+            //"Invoice_Note" => $invoice->clientnote,
+           // "Delivery_Address" => $invoice->shipping_city,
+            "Accounting_Software_Number" => 99999999,
+           // "Union_Vat_Number" => 0,
+            "Invoice_Type" => 305,
+            //"Vehicle_License_Number" => 0,
+            //"Transition_Location" => 0,
+            //"Additional_Information" => "",
+        ];
+        
+        // $this->db->select("*");
+        // $this->db->from(db_prefix() . 'itemable');
+        // $this->db->where("rel_id", $invoice->id);
+        // $items = $this->db->get()->result_array();
+        // $send_items = [];
+        // $i = 1;
+        // foreach ($items as $item) {
+        //     $new_item = [];
+        //     $new_item["Index"] = $i;
+        //     $new_item["Catalog_ID"] = $item['description'];
+        //     $new_item['Description'] = $item['long_description'];
+        //     $new_item['Measure_Unit_Description'] = 'יחידה';
+        //     $new_item['Quantity'] = $item['qty'];
+        //     $new_item['Price_Per_Unit'] = $item['rate'];
+        //     $new_item['Discount'] = 0;
+        //     $new_item['VAT_Rate'] = 17;
+        //     $new_item['VAT_Amount'] = $item['rate'] * $item['qty'] * (100 / $new_item['VAT_Rate']);
+        //     $send_items[] = $new_item;
+        // }   
+        // $request_data['Items'] = $send_items;
+        $access_token = get_option("access_token");
+        $end_point_url = get_option("sham_api_end_point");
+        $postdata = json_encode($request_data);
+        
+        $opts = array('http' =>
+            array(
+                'method'  => 'POST',
+                'header'  => "Content-Type: application/json\r\nHost: ita-api.taxes.gov.il\r\nAuthorization: Bearer $access_token\r\n",
+                'content' => $postdata
+            )
+        );
+        $context  = stream_context_create($opts);
+        $result = file_get_contents($end_point_url."/Invoices/v1/Approval", false, $context);
+        $result = json_decode($result, true);
+        var_dump($result);
+        return $result['Confirmation_Number'];
     }
 }

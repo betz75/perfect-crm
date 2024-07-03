@@ -25,6 +25,10 @@
                 <a href="#proposals" aria-controls="proposals" role="tab"
                     data-toggle="tab"><?php echo _l('proposals'); ?></a>
             </li>
+            <li role="presentation">
+                <a href="#sham" aria-controls="sham" role="tab"
+                    data-toggle="tab"><?php echo _l('sham_system'); ?></a>
+            </li>
             <?php hooks()->do_action('after_finance_settings_last_tab'); ?>
         </ul>
     </div>
@@ -343,6 +347,37 @@
         <hr />
         <?php echo render_textarea('settings[predefined_clientnote_estimate]', 'settings_predefined_clientnote', get_option('predefined_clientnote_estimate'), ['rows' => 6]); ?>
         <?php echo render_textarea('settings[predefined_terms_estimate]', 'settings_predefined_predefined_term', get_option('predefined_terms_estimate'), ['rows' => 6]); ?>
+    </div>
+    <div role="sham" class="tab-pane" id="sham">
+        <div class="row">
+            <div class="col-12">
+                <label for="settings[sham_api_key]">
+                </label>
+                <?php echo render_input('settings[sham_api_key]', 'sham_api_key', get_option('sham_api_key')); ?>
+                <label for="settings[secret_key]">
+                </label>
+                <?php echo render_input('settings[secret_key]', 'secret_key', get_option('secret_key')); ?>
+                <label for="settings[bounce_url]">
+                </label>
+                <?php echo render_input('settings[bounce_url]', 'bounce_url', get_option('bounce_url')); ?>
+                <label for="settings[access_token]">
+                </label>
+                <?php echo render_input('settings[access_token]', 'access_token', get_option('access_token')); ?>
+                <label for="settings[refresh_token]">
+                </label>
+                <?php echo render_input('settings[refresh_token]', 'refresh_token', get_option('refresh_token')); ?>
+                <label for="settings[sham_auth_end_point]">
+                </label>
+                <?php echo render_input('settings[sham_auth_end_point]', 'sham_auth_end_point', get_option('sham_auth_end_point')); ?>
+                <label for="settings[sham_api_end_point]">
+                </label>
+                <?php echo render_input('settings[sham_api_end_point]', 'sham_api_end_point', get_option('sham_api_end_point')); ?>
+                <label for="settings[sham_state_code]">
+                </label>
+                <?php echo render_input('settings[sham_state_code]', 'sham_state_code', get_option('sham_state_code')); ?>
+                <a target="_blank" href="<?= get_option('sham_auth_end_point')?>/longtimetoken/oauth2/authorize?response_type=code&client_id=<?= get_option('sham_api_key') ?>&scope=scope&state=">לאחר שמירה לחץ כאן להזדהות</a>
+            </div>
+        </div>
     </div>
     <div role="tabpanel" class="tab-pane" id="proposals">
         <?php echo render_input('settings[proposal_number_prefix]', 'proposal_number_prefix', get_option('proposal_number_prefix')); ?>

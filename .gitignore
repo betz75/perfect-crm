@@ -5,3 +5,4 @@ node_modules/*
 adminer.php
 package-lock.json
 mix-manifest.json
+application/logs/*

@@ -131,7 +131,17 @@
                     </address>
                     <?php hooks()->do_action('after_left_panel_invoicehtml', $invoice); ?>
                 </div>
+
             </div>
+            <?php if ($invoice->shaam_number) : ?>
+
+            <div class="row">
+                <div class="col-md-12 text-center" >
+                    <?= _l("invoice_shaam_number") ?>
+                    <?php echo $invoice->shaam_number; ?>
+                </div>
+            </div>
+            <?php endif; ?>
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
