@@ -752,14 +752,11 @@ class Invoices extends AdminController
     }
 
     public function getShamInvoiceNumber($invoice = null) {
-        error_reporting(E_ALL);
-        ini_set("display_errors", 1);
         if ($invoice->total < 25000) {
             return null;
         }
         if ($invoice->status == Invoices_model::STATUS_DRAFT) {
             return "exp-".rand("100000", "999999");
-
         }
         $this->load->model('clients_model');
         $client = $this->clients_model->get($invoice->clientid);
@@ -820,6 +817,10 @@ class Invoices extends AdminController
         );
         $context  = stream_context_create($opts);
         $result = file_get_contents($end_point_url."/Invoices/v1/Approval", false, $context);
+        if ($result === false) 
+        {
+            return "Error-999";
+        }
         $result = json_decode($result, true);
         var_dump($result);
         return $result['Confirmation_Number'];
