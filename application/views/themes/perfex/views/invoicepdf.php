@@ -42,11 +42,22 @@ $organization_info .= format_organization_info();
 $organization_info .= '</div>';
 
 // Bill to
-$invoice_info = '<b>' . _l('invoice_bill_to') . ':</b>';
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+$invoice_info = '<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td width="50%" align="'.$text_left.'">';
+$invoice_info .= '<b>' . _l('invoice_bill_to') . ':</b>';
 $invoice_info .= '<div style="color:#424242;">';
-    $invoice_info .= format_customer_info($invoice, 'invoice', 'billing');
-$invoice_info .= '</div>';
+$invoice_info .= format_customer_info($invoice, 'invoice', 'billing');
+$invoice_info .= '</div></td><td width="50%" align="'.$text_right.'">';
+$invoice_info .= '<br />' . _l('invoice_data_date') . ' ' . _d($invoice->date) . '<br />';
 
+$invoice_info = hooks()->apply_filters('invoice_pdf_header_after_date', $invoice_info, $invoice);
+
+if (!empty($invoice->duedate)) {
+    $invoice_info .= _l('invoice_data_duedate') . ' ' . _d($invoice->duedate) . '<br />';
+    $invoice_info = hooks()->apply_filters('invoice_pdf_header_after_due_date', $invoice_info, $invoice);
+}
+$invoice_info .= "</td></tr></table>";
 // ship to to
 if ($invoice->include_shipping == 1 && $invoice->show_shipping_on_invoice == 1) {
     $invoice_info .= '<div style="border-top:1px solid gray; height: 0px"></div>';
@@ -56,14 +67,6 @@ if ($invoice->include_shipping == 1 && $invoice->show_shipping_on_invoice == 1) 
     $invoice_info .= '</div>';
 }
 
-$invoice_info .= '<br />' . _l('invoice_data_date') . ' ' . _d($invoice->date) . '<br />';
-
-$invoice_info = hooks()->apply_filters('invoice_pdf_header_after_date', $invoice_info, $invoice);
-
-if (!empty($invoice->duedate)) {
-    $invoice_info .= _l('invoice_data_duedate') . ' ' . _d($invoice->duedate) . '<br />';
-    $invoice_info = hooks()->apply_filters('invoice_pdf_header_after_due_date', $invoice_info, $invoice);
-}
 
 
 
