@@ -372,7 +372,7 @@
                 <label for="settings[sham_api_end_point]">
                 </label>
                 <?php echo render_input('settings[sham_api_end_point]', 'sham_api_end_point', get_option('sham_api_end_point')); ?>
-                <a target="_blank" href="<?= get_option('sham_auth_end_point')?>/longtimetoken/oauth2/authorize?response_type=code&client_id=<?= get_option('sham_api_key') ?>&scope=scope&state=">לאחר שמירה לחץ כאן להזדהות</a>
+                <a target="_blank" href="<?= get_option('sham_auth_end_point')?>/longtimetoken/oauth2/authorize?response_type=code&client_id=<?= get_option('sham_api_key') ?>&scope=scope&state=&redirect_uri=<?= urlencode(get_option('bounce_url')) ?>">לאחר שמירה לחץ כאן להזדהות</a>
             </div>
         </div>
     </div>
