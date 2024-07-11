@@ -80,13 +80,8 @@
         <div class="panel-body">
             <div class="col-md-10 col-md-offset-1">
                 <div class="row mtop20">
-                    <div class="col-md-6 col-sm-6 transaction-html-info-col-left">
-                        <h4 class="bold estimate-html-number"><?php echo e(format_estimate_number($estimate->id)); ?></h4>
-                        <address class="estimate-html-company-info tw-text-neutral-500 tw-text-normal">
-                            <?php echo format_organization_info(); ?>
-                        </address>
-                    </div>
-                    <div class="col-sm-6 text-right transaction-html-info-col-right">
+                  
+                    <div class="col-sm-6 tw-text-start transaction-html-info-col-right">
                         <span class="tw-font-medium tw-text-neutral-600 estimate_to">
                             <?php echo _l('estimate_to'); ?>
                         </span>
@@ -102,20 +97,7 @@
                             <?php echo format_customer_info($estimate, 'estimate', 'shipping'); ?>
                         </address>
                         <?php } ?>
-                        <p class="estimate-html-date tw-mb-0 tw-text-normal">
-                            <span class="tw-font-medium tw-text-neutral-700">
-                                <?php echo _l('estimate_data_date'); ?>:
-                            </span>
-                            <?php echo e(_d($estimate->date)); ?>
-                        </p>
-                        <?php if (!empty($estimate->expirydate)) { ?>
-                        <p class="estimate-html-expiry-date tw-mb-0 tw-text-normal">
-                            <span class="tw-font-medium tw-text-neutral-700">
-                                <?php echo _l('estimate_data_expiry_date'); ?>:
-                            </span>
-                            <?php echo e(_d($estimate->expirydate)); ?>
-                        </p>
-                        <?php } ?>
+                      
                         <?php if (!empty($estimate->reference_no)) { ?>
                         <p class="estimate-html-reference-no tw-mb-0 tw-text-normal">
                             <span class="tw-font-medium tw-text-neutral-700"><?php echo _l('reference_no'); ?>:</span>
@@ -123,11 +105,7 @@
                         </p>
                         <?php } ?>
                         <?php if ($estimate->sale_agent && get_option('show_sale_agent_on_estimates') == 1) { ?>
-                        <p class="estimate-html-sale-agent tw-mb-0 tw-text-normal">
-                            <span
-                                class="tw-font-medium tw-text-neutral-700"><?php echo _l('sale_agent_string'); ?>:</span>
-                            <?php echo e(get_staff_full_name($estimate->sale_agent)); ?>
-                        </p>
+                       
                         <?php } ?>
                         <?php if ($estimate->project_id && get_option('show_project_on_estimate') == 1) { ?>
                         <p class="estimate-html-project tw-mb-0 tw-text-normal">
@@ -150,6 +128,26 @@
                         <?php
                   } ?>
                     </div>
+                    <div class="col-md-6 col-sm-6 tw-text-end transaction-html-info-col-left">
+                        <h4 class="bold estimate-html-number"><?php echo e(format_estimate_number($estimate->id)); ?></h4>
+                        <address class="estimate-html-company-info tw-text-neutral-500 tw-text-normal">
+                            <?php echo format_organization_info(); ?>
+                        </address>
+                        <p class="estimate-html-date tw-mb-0 tw-text-normal">
+                            <span class="tw-font-medium tw-text-neutral-700">
+                                <?php echo _l('estimate_data_date'); ?>:
+                            </span>
+                            <?php echo e(_d($estimate->date)); ?>
+                        </p>
+                        <?php if (!empty($estimate->expirydate)) { ?>
+                        <p class="estimate-html-expiry-date tw-mb-0 tw-text-normal">
+                            <span class="tw-font-medium tw-text-neutral-700">
+                                <?php echo _l('estimate_data_expiry_date'); ?>:
+                            </span>
+                            <?php echo e(_d($estimate->expirydate)); ?>
+                        </p>
+                        <?php } ?>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
@@ -160,8 +158,14 @@
                             ?>
                         </div>
                     </div>
-                    <div class="col-md-6 col-md-offset-6">
-                        <table class="table text-right tw-text-normal">
+                    <div class="col-md-12"></div>
+                    <p class="estimate-html-sale-agent tw-text-normal tw-pr-3" >
+                            <span
+                                class="tw-font-medium tw-text-neutral-700"><?php echo _l('sale_agent_string'); ?>:</span>
+                            <?php echo e(get_staff_full_name($estimate->sale_agent)); ?>
+                        </p>
+                    <div class="col-md-6">
+                        <table class="table tw-text-start tw-text-normal">
                             <tbody>
                                 <tr id="subtotal">
                                     <td>
@@ -169,7 +173,7 @@
                                             <?php echo _l('estimate_subtotal'); ?>
                                         </span>
                                     </td>
-                                    <td class="subtotal">
+                                    <td class="subtotal tw-text-end">
                                         <?php echo e(app_format_money($estimate->subtotal, $estimate->currency_name)); ?>
                                     </td>
                                 </tr>
@@ -182,14 +186,14 @@
                                             <?php } ?>
                                         </span>
                                     </td>
-                                    <td class="discount">
+                                    <td class="discount tw-text-end">
                                         <?php echo e('-' . app_format_money($estimate->discount_total, $estimate->currency_name)); ?>
                                     </td>
                                 </tr>
                                 <?php } ?>
                                 <?php
                                     foreach ($items->taxes() as $tax) {
-                                        echo '<tr class="tax-area"><td class="bold !tw-text-neutral-700">' . e($tax['taxname']) . ' (' . e(app_format_number($tax['taxrate'])) . '%)</td><td>' . e(app_format_money($tax['total_tax'], $estimate->currency_name)) . '</td></tr>';
+                                        echo '<tr class="tax-area"><td class="bold !tw-text-neutral-700">' . e($tax['taxname']) . ' (' . e(app_format_number($tax['taxrate'])) . '%)</td><td class=" tw-text-end">' . e(app_format_money($tax['total_tax'], $estimate->currency_name)) . '</td></tr>';
                                     }
                                 ?>
                                 <?php if ((int)$estimate->adjustment != 0) { ?>
@@ -199,7 +203,7 @@
                                             <?php echo _l('estimate_adjustment'); ?>
                                         </span>
                                     </td>
-                                    <td class="adjustment">
+                                    <td class="adjustment tw-text-end">
                                         <?php echo e(app_format_money($estimate->adjustment, $estimate->currency_name)); ?>
                                     </td>
                                 </tr>
@@ -210,7 +214,7 @@
                                             <?php echo _l('estimate_total'); ?>
                                         </span>
                                     </td>
-                                    <td class="total">
+                                    <td class="total tw-text-end">
                                         <?php echo e(app_format_money($estimate->total, $estimate->currency_name)); ?>
                                     </td>
                                 </tr>

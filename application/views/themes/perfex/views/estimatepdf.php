@@ -14,44 +14,46 @@ if (get_option('show_status_on_pdf_ei') == 1) {
     $info_right_column .= '<br /><span style="color:rgb(' . estimate_status_color_pdf($status) . ');text-transform:uppercase;">' . format_estimate_status($status, '', false) . '</span>';
 }
 
-// Add logo
 $info_left_column .= pdf_logo_url();
-// Write top left logo and right column info/text
-pdf_multi_row($info_left_column, $info_right_column, $pdf, ($dimensions['wk'] / 2) - $dimensions['lm']);
 
-$pdf->ln(10);
 
-$organization_info = '<div style="color:#424242;">';
-    $organization_info .= format_organization_info();
-$organization_info .= '</div>';
-
-// Estimate to
-$estimate_info = '<b>' . _l('estimate_to') . '</b>';
-$estimate_info .= '<div style="color:#424242;">';
-$estimate_info .= format_customer_info($estimate, 'estimate', 'billing');
-$estimate_info .= '</div>';
-
-// ship to to
-if ($estimate->include_shipping == 1 && $estimate->show_shipping_on_estimate == 1) {
-    $estimate_info .= '<br /><b>' . _l('ship_to') . '</b>';
-    $estimate_info .= '<div style="color:#424242;">';
-    $estimate_info .= format_customer_info($estimate, 'estimate', 'shipping');
-    $estimate_info .= '</div>';
-}
-
-$estimate_info .= '<br />' . _l('estimate_data_date') . ': ' . _d($estimate->date) . '<br />';
+$dates = '<br />' . _l('estimate_data_date') . ': ' . _d($estimate->date) . '<br />';
 
 if (!empty($estimate->expirydate)) {
-    $estimate_info .= _l('estimate_data_expiry_date') . ': ' . _d($estimate->expirydate) . '<br />';
+    $dates .= _l('estimate_data_expiry_date') . ': ' . _d($estimate->expirydate) . '<br />';
 }
+
+
+// Add logo
+// Write top left logo and right column info/text
+
+
+
+$organization_info = '<div style="color:#424242;">';
+$organization_info .= format_organization_info();
+$organization_info .= '</div>';
+// Estimate to
+$estimate_info = '<div style="text-align:right"><b>' . _l('estimate_to') . '</b>';
+$estimate_info .= '<div style="color:#424242;">';
+$estimate_info .= format_customer_info($estimate, 'estimate', 'billing');
+$estimate_info .= '</div></div>';
+
+$ship_to_info = '';
+// ship to to
+if ($estimate->include_shipping == 1 && $estimate->show_shipping_on_estimate == 1) {
+    $ship_to_info .= '<div style="border-top: 1px solid gray"></div><br /><b>' . _l('ship_to') . '</b>';
+    $ship_to_info .= '<div style="color:#424242;">';
+    $ship_to_info .= format_customer_info($estimate, 'estimate', 'shipping');
+    $ship_to_info .= '</div><br><br>';
+}
+
+
 
 if (!empty($estimate->reference_no)) {
     $estimate_info .= _l('reference_no') . ': ' . $estimate->reference_no . '<br />';
 }
 
-if ($estimate->sale_agent && get_option('show_sale_agent_on_estimates') == 1) {
-    $estimate_info .= _l('sale_agent_string') . ': ' . get_staff_full_name($estimate->sale_agent) . '<br />';
-}
+
 
 if ($estimate->project_id && get_option('show_project_on_estimate') == 1) {
     $estimate_info .= _l('project') . ': ' . get_project_name_by_id($estimate->project_id) . '<br />';
@@ -68,10 +70,20 @@ foreach ($pdf_custom_fields as $field) {
 $left_info  = $swap == '1' ? $estimate_info : $organization_info;
 $right_info = $swap == '1' ? $organization_info : $estimate_info;
 
-pdf_multi_row($left_info, $right_info, $pdf, ($dimensions['wk'] / 2) - $dimensions['lm']);
+//pdf_multi_row($left_info, $right_info, $pdf, ($dimensions['wk'] / 2) - $dimensions['lm']);
 
 // The Table
-$pdf->Ln(hooks()->apply_filters('pdf_info_and_table_separator', 6));
+$markup = '<table><tr><td align="right">';
+$markup .= $info_right_column;
+$markup .= $estimate_info;
+$markup .= $organization_info;
+
+$markup .= '</td><td align="left">';
+$markup .= $info_left_column;
+$markup .= $dates;
+$markup .= '</td></tr></table>';
+$markup .= $ship_to_info;
+$pdf->writeHTML($markup, true, false, true, false, '');
 
 // The items table
 $items = get_items_table_data($estimate, 'estimate', 'pdf');
@@ -79,7 +91,11 @@ $items = get_items_table_data($estimate, 'estimate', 'pdf');
 $tblhtml = $items->table();
 
 $pdf->writeHTML($tblhtml, true, false, false, false, '');
+if ($estimate->sale_agent && get_option('show_sale_agent_on_estimates') == 1) {
+    $agent .= _l('sale_agent_string') . ': ' . get_staff_full_name($estimate->sale_agent) . '<br />';
+    $pdf->writeHTML($agent, true, false, false, false, '');
 
+}
 $pdf->Ln(8);
 $tbltotal = '';
 $tbltotal .= '<table cellpadding="6" style="font-size:' . ($font_size + 4) . 'px">';
@@ -136,19 +152,21 @@ if (get_option('total_to_words_enabled') == 1) {
 }
 
 if (!empty($estimate->clientnote)) {
-    $pdf->Ln(4);
-    $pdf->SetFont($font_name, 'B', $font_size);
-    $pdf->Cell(0, 0, _l('estimate_note'), 0, 1, 'L', 0, '', 0);
-    $pdf->SetFont($font_name, '', $font_size);
-    $pdf->Ln(2);
-    $pdf->writeHTMLCell('', '', '', '', $estimate->clientnote, 0, 1, false, true, 'L', true);
+    $markup = '';
+    $markup = '<div style="text-align:right"><b>';
+    $markup .= _l('estimate_note');
+    $markup .= "</b><br>";
+    $markup .= $estimate->clientnote;
+
+    $pdf->writeHTML($markup, true, false, true, false, '');
+
 }
 
 if (!empty($estimate->terms)) {
-    $pdf->Ln(4);
-    $pdf->SetFont($font_name, 'B', $font_size);
-    $pdf->Cell(0, 0, _l('terms_and_conditions') . ":", 0, 1, 'L', 0, '', 0);
-    $pdf->SetFont($font_name, '', $font_size);
-    $pdf->Ln(2);
-    $pdf->writeHTMLCell('', '', '', '', $estimate->terms, 0, 1, false, true, 'L', true);
+    $markup = '';
+    $markup = '<br><div style="text-align:right"><b>';
+    $markup .= _l('terms_and_conditions');
+    $markup .= "</b><br>";
+    $markup .= $estimate->terms;
+    $pdf->writeHTML($markup, true, false, true, false, '');
 }
