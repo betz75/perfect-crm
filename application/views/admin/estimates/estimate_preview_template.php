@@ -296,25 +296,8 @@
                             </h4>
                             </div>
                             <?php } ?>
-                            <div class="col-md-6 col-sm-6">
-                                <h4 class="bold">
-                                    <?php
-                              $tags = get_tags_in($estimate->id, 'estimate');
-                              if (count($tags) > 0) {
-                                  echo '<i class="fa fa-tag" aria-hidden="true" data-toggle="tooltip" data-title="' . e(implode(', ', $tags)) . '"></i>';
-                              }
-                              ?>
-                                    <a href="<?php echo admin_url('estimates/estimate/' . $estimate->id); ?>">
-                                        <span id="estimate-number">
-                                            <?php echo e(format_estimate_number($estimate->id)); ?>
-                                        </span>
-                                    </a>
-                                </h4>
-                                <address class="tw-text-neutral-500">
-                                    <?php echo format_organization_info(); ?>
-                                </address>
-                            </div>
-                            <div class="col-sm-6 text-right">
+                       
+                            <div class="col-sm-6 tw-text-start">
                                 <span class="bold"><?php echo _l('estimate_to'); ?></span>
                                 <address class="tw-text-neutral-500">
                                     <?php echo format_customer_info($estimate, 'estimate', 'billing', true); ?>
@@ -368,6 +351,24 @@
                                 <?php
                            } ?>
                             </div>
+                            <div class="col-md-6 col-sm-6 tw-text-end">
+                                <h4 class="bold">
+                                    <?php
+                              $tags = get_tags_in($estimate->id, 'estimate');
+                              if (count($tags) > 0) {
+                                  echo '<i class="fa fa-tag" aria-hidden="true" data-toggle="tooltip" data-title="' . e(implode(', ', $tags)) . '"></i>';
+                              }
+                              ?>
+                                    <a href="<?php echo admin_url('estimates/estimate/' . $estimate->id); ?>">
+                                        <span id="estimate-number">
+                                            <?php echo e(format_estimate_number($estimate->id)); ?>
+                                        </span>
+                                    </a>
+                                </h4>
+                                <address class="tw-text-neutral-500">
+                                    <?php echo format_organization_info(); ?>
+                                </address>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
@@ -378,16 +379,16 @@
                                     ?>
                                 </div>
                             </div>
-                            <div class="col-md-5 col-md-offset-7">
-                                <table class="table text-right">
+                            <div class="col-md-5">
+                                <table class="table tw-text-start">
                                     <tbody>
-                                        <tr id="subtotal">
+                                        <tr id="subtotal" >
                                             <td>
                                                 <span class="bold tw-text-neutral-700">
                                                     <?php echo _l('estimate_subtotal'); ?>
                                                 </span>
                                             </td>
-                                            <td class="subtotal">
+                                            <td class="subtotal tw-text-end">
                                                 <?php echo e(app_format_money($estimate->subtotal, $estimate->currency_name)); ?>
                                             </td>
                                         </tr>
@@ -401,14 +402,14 @@
                                                     <?php } ?>
                                                 </span>
                                             </td>
-                                            <td class="discount">
+                                            <td class="discount  tw-text-end">
                                                 <?php echo e('-' . app_format_money($estimate->discount_total, $estimate->currency_name)); ?>
                                             </td>
                                         </tr>
                                         <?php } ?>
                                         <?php
                                             foreach ($items->taxes() as $tax) {
-                                                echo '<tr class="tax-area"><td class="bold !tw-text-neutral-700">' . e($tax['taxname']) . ' (' . e(app_format_number($tax['taxrate'])) . '%)</td><td>' . e(app_format_money($tax['total_tax'], $estimate->currency_name)) . '</td></tr>';
+                                                echo '<tr class="tax-area"><td class="bold !tw-text-neutral-700">' . e($tax['taxname']) . ' (' . e(app_format_number($tax['taxrate'])) . '%)</td><td class=" tw-text-end">' . e(app_format_money($tax['total_tax'], $estimate->currency_name)) . '</td></tr>';
                                             }
                                         ?>
                                         <?php if ((int)$estimate->adjustment != 0) { ?>
@@ -418,7 +419,7 @@
                                                     <?php echo _l('estimate_adjustment'); ?>
                                                 </span>
                                             </td>
-                                            <td class="adjustment">
+                                            <td class="adjustment  tw-text-end">
                                                 <?php echo e(app_format_money($estimate->adjustment, $estimate->currency_name)); ?>
                                             </td>
                                         </tr>
@@ -429,7 +430,7 @@
                                                     <?php echo _l('estimate_total'); ?>
                                                 </span>
                                             </td>
-                                            <td class="total">
+                                            <td class="total  tw-text-end">
                                                 <?php echo e(app_format_money($estimate->total, $estimate->currency_name)); ?>
                                             </td>
                                         </tr>
