@@ -44,7 +44,11 @@ class Misc extends AdminController
 
     public function get_currency($id)
     {
-        echo json_encode(get_currency($id));
+        $currency = get_currency($id);
+
+        $currency->usd_to_ils = round(get_option("usd_to_ils"), 2);
+        $currency->eur_to_ils = round(get_option("eur_to_ils"), 2);
+        echo json_encode($currency);
     }
 
     public function get_taxes_dropdown_template()

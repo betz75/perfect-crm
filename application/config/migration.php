@@ -71,7 +71,7 @@ $config['migration_auto_latest'] = false;
 */
 $config['assets_version'] = 317;
 
-$config['migration_version'] = 317; // 3.1.6
+$config['migration_version'] = 318; // 3.1.6
 
 /*
 |--------------------------------------------------------------------------

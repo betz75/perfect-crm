@@ -320,7 +320,12 @@ class Invoices extends AdminController
                         redirect(admin_url('invoices/invoice'));
                     }
                 }
-          
+                if ($invoice_data['exchange_rate_toggl'] ?? null) {
+                    $invoice_data['exchange_rate'] = $invoice_data['exchange_rate'];
+                } else {
+                    $invoice_data['exchange_rate'] = null;
+                }
+                unset($invoice_data['exchange_rate_toggl']);
                 $id = $this->invoices_model->add($invoice_data);
                 $sham_number = $this->invoices_model->get($id);
          
@@ -822,7 +827,7 @@ class Invoices extends AdminController
             return "Error-999";
         }
         $result = json_decode($result, true);
-        var_dump($result);
         return $result['Confirmation_Number'];
     }
+
 }
