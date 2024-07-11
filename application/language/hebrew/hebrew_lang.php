@@ -1849,6 +1849,7 @@ $lang['not_task_unmarked_as_complete']                            = 'משימה 
 $lang['not_ticket_assigned_to_you']                               = 'קריאה שהוקצאה לך - %s ...';
 $lang['not_ticket_reassigned_to_you']                             = 'הקריאה הועבר לך מחדש - %s ...';
 $lang['not_estimate_customer_accepted']                           = 'מזל טוב! לאומדן מקובל לקוח עם מספר %s ';
+$lang['estimate_table_sku_heading']                           = 'מק"ט';
 $lang['not_estimate_customer_declined']                           = 'הערכת הלקוח עם מספר %s';
 $lang['estimate_activity_converted']                              = 'המיר הערכה זו לחשבונית. <br /> %s';
 $lang['estimate_activity_created']                                = 'יצר את האומדן';
