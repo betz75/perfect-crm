@@ -69,7 +69,7 @@ $config['migration_auto_latest'] = false;
 | be upgraded / downgraded to.
 |
 */
-$config['assets_version'] = 317;
+$config['assets_version'] = 318;
 
 $config['migration_version'] = 318; // 3.1.6
 
