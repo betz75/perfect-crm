@@ -20,6 +20,8 @@ return App_table::find('invoices')
             '(SELECT GROUP_CONCAT(name SEPARATOR ",") FROM ' . db_prefix() . 'taggables JOIN ' . db_prefix() . 'tags ON ' . db_prefix() . 'taggables.tag_id = ' . db_prefix() . 'tags.id WHERE rel_id = ' . db_prefix() . 'invoices.id and rel_type="invoice" ORDER by tag_order ASC) as tags',
             'duedate',
             db_prefix() . 'invoices.status',
+            'exchange_rate',
+
         ];
 
         $sIndexColumn = 'id';
@@ -104,10 +106,13 @@ return App_table::find('invoices')
             $numberOutput .= '</div>';
 
             $row[] = $numberOutput;
+            $currency =  $aRow['currency_name'];
+            if ($aRow['exchange_rate']) {
+                $currency = "ILS";
+            }
+            $row[] = e(app_format_money($aRow['total'], $currency));
 
-            $row[] = e(app_format_money($aRow['total'], $aRow['currency_name']));
-
-            $row[] = e(app_format_money($aRow['total_tax'], $aRow['currency_name']));
+            $row[] = e(app_format_money($aRow['total_tax'], $currency));
 
             $row[] = e($aRow['year']);
 
