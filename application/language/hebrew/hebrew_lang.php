@@ -1862,6 +1862,12 @@ $lang['invoice_estimate_activity_updated_item_rate']              = 'שיעור 
 $lang['invoice_estimate_activity_updated_qty_item']               = 'כמות מעודכנת על פריט <b> %s </b> מ- %s ל- %s';
 $lang['invoice_estimate_activity_added_item']                     = 'נוסף פריט חדש <b>%s </b>';
 $lang['invoice_estimate_activity_sent_to_client']                 = 'הערכה נשלחת ללקוח';
+$lang['invoice_currency_exchange_rate']                           = 'שער המרה';
+$lang['exchange_invoice_to_shekels']                           = 'המר חשבונית לשקלים';
+$lang['invoice_amount_before_exchange']                           = 'סכום לפני המרה';
+$lang['invoice_exchange_rate_value']                           = 'שער המרה';
+
+
 $lang['invoice_shaam_number']                                     = 'מספר הקצאה';
 $lang['estimate_activity_client_accepted_and_converted']          = 'הלקוח קיבל את האומדן הזה. ההערכה מומר לחשבונית עם מספר %s ';
 $lang['estimate_activity_client_accepted']                        = 'הלקוח קיבל את האומדן הזה';

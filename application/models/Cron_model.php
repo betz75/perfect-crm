@@ -94,6 +94,7 @@ class Cron_model extends App_Model
             $this->stop_task_timers();
             $this->non_billed_tasks_notification();
             $this->refreshShamAccessToken();
+            $this->getExchangeRates();
             /**
              * Finally send any emails in the email queue - if enabled and any
              */
@@ -1967,5 +1968,34 @@ class Cron_model extends App_Model
         $refresh_token = get_option("refresh_token");
         $sham_service = new ShaamService($refresh_token, "refresh_token","refresh_token");
         $sham_service->getAccessToekn();  
+    }
+    private function getExchangeRates() {
+        $last_time = get_option('last_cron_run_exchangerate');
+        $diff = time() - $last_time;
+        if ($last_time && $diff < 3600 * 24) {
+            return;
+        }
+        $url_usd = "https://api.apilayer.com/exchangerates_data/latest?base=USD&symbols=ILS";
+        $url_eur = "https://api.apilayer.com/exchangerates_data/latest?base=EUR&symbols=ILS";
+        $opts = [
+            "http" => [
+                "header" => "apikey: FELB70GhNX5lfQIr61DBVxHAvF0lUg9B\r\n"
+            ]
+        ];
+        $context = stream_context_create($opts);
+        $usd_to_ils = file_get_contents($url_usd, false, $context);
+
+        $usd_to_ils = json_decode($usd_to_ils, true);
+        $eur_to_ils = file_get_contents($url_eur, false, $context);
+        $eur_to_ils = json_decode($eur_to_ils, true);
+
+        $CI = get_instance();
+        $post_data = ["settings" => []];
+        $post_data['settings']['usd_to_ils'] = $usd_to_ils['rates']['ILS'];
+        $post_data['settings']['eur_to_ils'] =  $eur_to_ils['rates']['ILS'];
+        $CI->load->model('settings_model');
+        $CI->settings_model->update($post_data);
+        update_option('last_cron_run_exchangerate', time());
+
     }
 }

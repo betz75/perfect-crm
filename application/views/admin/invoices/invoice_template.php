@@ -303,7 +303,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <?php
-                            $currency_attr = ['disabled' => true, 'data-show-subtext' => true];
+                            $currency_attr = [ 'data-show-subtext' => true];
                             $currency_attr = apply_filters_deprecated('invoice_currency_disabled', [$currency_attr], '2.3.0', 'invoice_currency_attributes');
 
                             foreach ($currencies as $currency) {
@@ -493,6 +493,7 @@
                 </div>
             <?php
             } ?>
+
             <div class="col-md-<?php if (!isset($invoice_from_project)) {
                                     echo 5;
                                 } else {
@@ -521,6 +522,18 @@
                         <label for="sq_3"><?php echo _l('invoice_table_quantity_heading'); ?>/<?php echo _l('invoice_table_hours_heading'); ?></label>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="row exchange_rate_global">
+            <div class="col-md-5 tw-flex tw-items-center">
+                <label class="tw-flex tw-items-center" >
+                    <input type='checkbox' name="exchange_rate_toggl" id="exchangeRateToggl" checked> <span>&nbsp;&nbsp;<?= _l("exchange_invoice_to_shekels") ?></span>
+                 </label>
+                <label class="tw-flex tw-items-center"  id="exchangeRateLabel">
+                    <div class="!tw-w-28">&nbsp; | <?= _l('invoice_currency_exchange_rate') ?>:</div>
+                    <input type="number" class="form-control" name="exchange_rate" id="exchangeRateField">
+                 </label>
+                 
             </div>
         </div>
         <?php if (isset($invoice_from_project)) {
@@ -670,6 +683,20 @@
         <div class="col-md-8 col-md-offset-4">
             <table class="table text-right">
                 <tbody>
+                    <tr id="amountBeforeExchange" class='exchange-rate-hide'>
+                        <td>
+                            <span class="bold tw-text-neutral-700"><?php echo _l('invoice_amount_before_exchange'); ?> :</span>
+                        </td>
+                        <td class="amount-before-exchange">
+                        </td>
+                    </tr>
+                    <tr id="exchangeRate" class='exchange-rate-hide'>
+                        <td>
+                            <span class="bold tw-text-neutral-700"><?php echo _l('invoice_exchange_rate_value'); ?> :</span>
+                        </td>
+                        <td class="exchange-rate">
+                        </td>
+                    </tr>
                     <tr id="subtotal">
                         <td>
                             <span class="bold tw-text-neutral-700"><?php echo _l('invoice_subtotal'); ?> :</span>

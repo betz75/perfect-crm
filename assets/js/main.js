@@ -2702,7 +2702,7 @@ $(function () {
     }
     calculate_total();
   });
-
+  $("body").on("change", "#exchangeRateToggl, #exchangeRateField, #currency", calculate_total);
   // Discount type for estimate/invoice
   $("body").on("change", 'select[name="discount_type"]', function () {
     // if discount_type == ''
@@ -7485,7 +7485,8 @@ function calculate_total() {
   if ($("body").hasClass("no-calculate-total")) {
     return false;
   }
-
+  var exchangeRateActive = !!$("#exchangeRateToggl:visible:checked").length;
+  var exchangeRateValue = exchangeRateActive ? ($("#exchangeRateField").val() || 1) : 1;
   var calculated_tax,
     taxrate,
     item_taxes,
@@ -7523,6 +7524,7 @@ function calculate_total() {
 
     $(this).find("td.amount").html(format_money(_amount, true));
     subtotal += _amount;
+   
     row = $(this);
     item_taxes = $(this).find("select.tax").selectpicker("val");
 
@@ -7553,6 +7555,8 @@ function calculate_total() {
       });
     }
   });
+  var beforeExchange = subtotal;
+  subtotal *= exchangeRateValue;
 
   // Discount by percent
   if (
@@ -7570,7 +7574,10 @@ function calculate_total() {
   ) {
     total_discount_calculated = discount_fixed;
   }
-
+  var optionalSymbol = null;
+  if (exchangeRateActive) {
+    optionalSymbol = "₪";
+  }
   $.each(taxes, function (taxname, total_tax) {
     if (
       discount_percent !== "" &&
@@ -7591,7 +7598,7 @@ function calculate_total() {
     }
 
     total += total_tax;
-    total_tax = format_money(total_tax);
+    total_tax = format_money(total_tax, false, optionalSymbol);
     $("#tax_id_" + slugify(taxname)).html(total_tax);
   });
 
@@ -7622,23 +7629,27 @@ function calculate_total() {
     total = total + adjustment;
   }
 
-  var discount_html = "-" + format_money(total_discount_calculated);
+  var discount_html = "-" + format_money(total_discount_calculated, false, optionalSymbol);
   $('input[name="discount_total"]').val(
     accounting.toFixed(total_discount_calculated, app.options.decimal_places)
   );
+  $("td.amount-before-exchange").text(format_money(beforeExchange, false));
+  
+  $("tr#exchangeRate td.exchange-rate").text(format_money(exchangeRateValue, false, optionalSymbol));
+
 
   // Append, format to html and display
   $(".discount-total").html(discount_html);
-  $(".adjustment").html(format_money(adjustment));
+  $(".adjustment").html(format_money(adjustment, false, optionalSymbol));
   $(".subtotal").html(
-    format_money(subtotal) +
+    format_money(subtotal, false, optionalSymbol) +
       hidden_input(
         "subtotal",
         accounting.toFixed(subtotal, app.options.decimal_places)
       )
   );
   $(".total").html(
-    format_money(total) +
+    format_money(total, false, optionalSymbol) +
       hidden_input(
         "total",
         accounting.toFixed(total, app.options.decimal_places)
@@ -7677,14 +7688,19 @@ function delete_item(row, itemid) {
 }
 
 // Format money function
-function format_money(total, excludeSymbol) {
+function format_money(total, excludeSymbol, optionalSymbol = null) {
   if (typeof excludeSymbol != "undefined" && excludeSymbol) {
     return accounting.formatMoney(total, {
       symbol: "",
     });
   }
+  const options = {
+  };
+  if (optionalSymbol) {
+    options.symbol = optionalSymbol;
+  }
 
-  return accounting.formatMoney(total);
+  return accounting.formatMoney(total, options);
 }
 
 // Set the currency for accounting
@@ -7695,10 +7711,18 @@ function init_currency(id, callback) {
     var selectedCurrencyId = !id
       ? $accountingTemplate.find('select[name="currency"]').val()
       : id;
-
     requestGetJSON("misc/get_currency/" + selectedCurrencyId).done(function (
       currency
     ) {
+      if (currency.name == "USD") {
+        $("#exchangeRateField:visible").val(currency.usd_to_ils);
+      } else if (currency.name == "EUR") {
+        $("#exchangeRateField:visible").val(currency.eur_to_ils);
+      }
+      $(document.body).attr("data-selected-currency", currency.name);
+      if (currency.name == "ILS") {
+        $("#exchangeRateToggl").prop("checked", false);
+      }
       // Used for formatting money
       accounting.settings.currency.decimal = currency.decimal_separator;
       accounting.settings.currency.thousand = currency.thousand_separator;

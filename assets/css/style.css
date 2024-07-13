@@ -5309,3 +5309,13 @@ div[contenteditable]:focus {
   padding: 8px;
   border-radius: 4px;
 }
+body:has(#exchangeRateToggl:not(:checked)) #exchangeRateLabel,
+body:has(#exchangeRateToggl:not(:checked)) .exchange-rate-hide{
+  display: none;
+}
+body[data-selected-currency="ILS"] .exchange_rate_global,
+body[data-selected-currency="ILS"] .exchange-rate-hide
+{
+  display: none;
+
+}
