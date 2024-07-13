@@ -525,7 +525,7 @@
             </div>
         </div>
         <div class="row exchange_rate_global">
-            <div class="col-md-5 tw-flex tw-items-center" >
+            <div class="col-md-5 tw-flex tw-items-center">
                 <label class="tw-flex tw-items-center" >
                     <input type='checkbox' name="exchange_rate_toggl" id="exchangeRateToggl" checked> <span>&nbsp;&nbsp;<?= _l("exchange_invoice_to_shekels") ?></span>
                  </label>

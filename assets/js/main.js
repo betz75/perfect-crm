@@ -7486,7 +7486,7 @@ function calculate_total() {
     return false;
   }
   var exchangeRateActive = !!$("#exchangeRateToggl:visible:checked").length;
-  var exchangeRateValue = exchangeRateActive ? ($("#exchangeRateField").val() || 0) : null;
+  var exchangeRateValue = exchangeRateActive ? ($("#exchangeRateField").val() || 1) : 1;
   var calculated_tax,
     taxrate,
     item_taxes,
@@ -7719,7 +7719,10 @@ function init_currency(id, callback) {
       } else if (currency.name == "EUR") {
         $("#exchangeRateField:visible").val(currency.eur_to_ils);
       }
-      $(document.body).attr("data-selected-currency", currency.symbol)
+      $(document.body).attr("data-selected-currency", currency.name);
+      if (currency.name == "ILS") {
+        $("#exchangeRateToggl").prop("checked", false);
+      }
       // Used for formatting money
       accounting.settings.currency.decimal = currency.decimal_separator;
       accounting.settings.currency.thousand = currency.thousand_separator;
