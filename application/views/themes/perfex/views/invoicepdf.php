@@ -109,13 +109,30 @@ $tblhtml = $items->table();
 $pdf->writeHTML($tblhtml, true, false, false, false, '');
 
 $pdf->Ln(8);
+$exchange_rate = null;
+$currency = $invoice->currency_name;
+    if ($invoice->exchange_rate) {
+        $currency = "ILS";
+        $exchange_rate = $invoice->exchange_rate;
 
+    }
 $tbltotal = '';
 $tbltotal .= '<table cellpadding="6" style="font-size:' . ($font_size + 4) . 'px">';
+if ($exchange_rate) {
+    $tbltotal .= '
+<tr>
+    <td width="85%"><strong>' . _l('invoice_amount_before_exchange') . '</strong></td>
+    <td width="15%">' . app_format_money($invoice->total / $exchange_rate, $invoice->currency_name) . '</td>
+</tr><tr>
+    <td width="85%"><strong>' . _l('invoice_exchange_rate_value') . '</strong></td>
+    <td width="15%">' . app_format_money( $exchange_rate, $currency) . '</td>
+</tr>';
+
+}
 $tbltotal .= '
 <tr>
     <td width="85%"><strong>' . _l('invoice_subtotal') . '</strong></td>
-    <td width="15%">' . app_format_money($invoice->subtotal, $invoice->currency_name) . '</td>
+    <td width="15%">' . app_format_money($invoice->subtotal, $currency) . '</td>
 </tr>';
 
 if (is_sale_discount_applied($invoice)) {
@@ -127,28 +144,28 @@ if (is_sale_discount_applied($invoice)) {
     }
     $tbltotal .= '</strong>';
     $tbltotal .= '</td>';
-    $tbltotal .= '<td width="15%">-' . app_format_money($invoice->discount_total, $invoice->currency_name) . '</td>
+    $tbltotal .= '<td width="15%">-' . app_format_money($invoice->discount_total, $currency) . '</td>
     </tr>';
 }
 
 foreach ($items->taxes() as $tax) {
     $tbltotal .= '<tr>
     <td width="85%"><strong>' . $tax['taxname'] . ' (' . app_format_number($tax['taxrate']) . '%)' . '</strong></td>
-    <td width="15%">' . app_format_money($tax['total_tax'], $invoice->currency_name) . '</td>
+    <td width="15%">' . app_format_money($tax['total_tax'], $currency) . '</td>
 </tr>';
 }
 
 if ((int) $invoice->adjustment != 0) {
     $tbltotal .= '<tr>
     <td width="85%"><strong>' . _l('invoice_adjustment') . '</strong></td>
-    <td width="15%">' . app_format_money($invoice->adjustment, $invoice->currency_name) . '</td>
+    <td width="15%">' . app_format_money($invoice->adjustment, $currency) . '</td>
 </tr>';
 }
 
 $tbltotal .= '
 <tr style="background-color:#f0f0f0;">
     <td width="85%"><strong>' . _l('invoice_total') . '</strong></td>
-    <td width="15%">' . app_format_money($invoice->total, $invoice->currency_name) . '</td>
+    <td width="15%">' . app_format_money($invoice->total, $currency) . '</td>
 </tr>';
 
 if (count($invoice->payments) > 0 && get_option('show_total_paid_on_invoice') == 1) {
@@ -160,7 +177,7 @@ if (count($invoice->payments) > 0 && get_option('show_total_paid_on_invoice') ==
         'where' => [
             'invoiceid' => $invoice->id,
         ],
-    ]), $invoice->currency_name) . '</td>
+    ]), $currency) . '</td>
     </tr>';
 }
 
@@ -168,14 +185,14 @@ if (get_option('show_credits_applied_on_invoice') == 1 && $credits_applied = tot
     $tbltotal .= '
     <tr>
         <td width="85%"><strong>' . _l('applied_credits') . '</strong></td>
-        <td width="15%">-' . app_format_money($credits_applied, $invoice->currency_name) . '</td>
+        <td width="15%">-' . app_format_money($credits_applied, $currency) . '</td>
     </tr>';
 }
 
 if (get_option('show_amount_due_on_invoice') == 1 && $invoice->status != Invoices_model::STATUS_CANCELLED) {
     $tbltotal .= '<tr style="background-color:#f0f0f0;">
        <td width="85%"><strong>' . _l('invoice_amount_due') . '</strong></td>
-       <td width="15%">' . app_format_money($invoice->total_left_to_pay, $invoice->currency_name) . '</td>
+       <td width="15%">' . app_format_money($invoice->total_left_to_pay, $currency) . '</td>
    </tr>';
 }
 

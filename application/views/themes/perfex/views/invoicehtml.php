@@ -151,15 +151,41 @@
                         ?>
                     </div>
                 </div>
+                <?php
+                    $exchange_rate = null;
+                    $currency = $invoice->currency_name;
+                        if ($invoice->exchange_rate) {
+                            $currency = "ILS";
+                            $exchange_rate = $invoice->exchange_rate;
+
+                        }
+                    ?>
                 <div class="col-md-6 col-md-offset-6">
                     <table class="table text-right tw-text-normal">
                         <tbody>
+                            <?php if ($exchange_rate) : ?>
+                                <tr id="before_exchange">
+                                <td>
+                                    <span class="bold tw-text-neutral-700"><?php echo _l('invoice_amount_before_exchange'); ?></span>
+                                </td>
+                                <td class="subtotal">
+                                    <?php echo e(app_format_money($invoice->total / $exchange_rate, $invoice->currency_name)); ?>
+                                </td>
+                            </tr> <tr id="exchange_rate">
+                                <td>
+                                    <span class="bold tw-text-neutral-700"><?php echo _l('invoice_exchange_rate_value'); ?></span>
+                                </td>
+                                <td class="subtotal">
+                                    <?php echo e(app_format_money($exchange_rate, $currency)); ?>
+                                </td>
+                            </tr>
+                            <?php endif; ?>
                             <tr id="subtotal">
                                 <td>
                                     <span class="bold tw-text-neutral-700"><?php echo _l('invoice_subtotal'); ?></span>
                                 </td>
                                 <td class="subtotal">
-                                    <?php echo e(app_format_money($invoice->subtotal, $invoice->currency_name)); ?>
+                                    <?php echo e(app_format_money($invoice->subtotal, $$currency)); ?>
                                 </td>
                             </tr>
                             <?php if (is_sale_discount_applied($invoice)) { ?>
@@ -171,13 +197,13 @@
                                             <?php } ?></span>
                                     </td>
                                     <td class="discount">
-                                        <?php echo e('-' . app_format_money($invoice->discount_total, $invoice->currency_name)); ?>
+                                        <?php echo e('-' . app_format_money($invoice->discount_total, $currency)); ?>
                                     </td>
                                 </tr>
                             <?php } ?>
                             <?php
                             foreach ($items->taxes() as $tax) {
-                                echo '<tr class="tax-area"><td class="bold !tw-text-neutral-700">' . e($tax['taxname']) . ' (' . e(app_format_number($tax['taxrate'])) . '%)</td><td>' . e(app_format_money($tax['total_tax'], $invoice->currency_name)) . '</td></tr>';
+                                echo '<tr class="tax-area"><td class="bold !tw-text-neutral-700">' . e($tax['taxname']) . ' (' . e(app_format_number($tax['taxrate'])) . '%)</td><td>' . e(app_format_money($tax['total_tax'], $currency)) . '</td></tr>';
                             }
                             ?>
                             <?php if ((int)$invoice->adjustment != 0) { ?>
@@ -188,7 +214,7 @@
                                         </span>
                                     </td>
                                     <td class="adjustment">
-                                        <?php echo e(app_format_money($invoice->adjustment, $invoice->currency_name)); ?>
+                                        <?php echo e(app_format_money($invoice->adjustment, $$currency)); ?>
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -197,7 +223,7 @@
                                     <span class="bold tw-text-neutral-700"><?php echo _l('invoice_total'); ?></span>
                                 </td>
                                 <td class="total">
-                                    <?php echo e(app_format_money($invoice->total, $invoice->currency_name)); ?>
+                                    <?php echo e(app_format_money($invoice->total, $$currency)); ?>
                                 </td>
                             </tr>
                             <?php if (count($invoice->payments) > 0 && get_option('show_total_paid_on_invoice') == 1) { ?>
@@ -218,7 +244,7 @@
                                         <span class="bold tw-text-neutral-700"><?php echo _l('applied_credits'); ?></span>
                                     </td>
                                     <td>
-                                        <?php echo e('-' . app_format_money($credits_applied, $invoice->currency_name)); ?>
+                                        <?php echo e('-' . app_format_money($credits_applied, $currency)); ?>
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -232,7 +258,7 @@
                                     </td>
                                     <td>
                                     <span class="<?php echo $invoice->total_left_to_pay > 0 ? 'text-danger': ''; ?>">
-                                            <?php echo e(app_format_money($invoice->total_left_to_pay, $invoice->currency_name)); ?>
+                                            <?php echo e(app_format_money($invoice->total_left_to_pay, $currency)); ?>
                                         </span>
                                     </td>
                                 </tr>
