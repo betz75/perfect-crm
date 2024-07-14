@@ -39,9 +39,10 @@ $estimate_info .= format_customer_info($estimate, 'estimate', 'billing');
 $estimate_info .= '</div></div>';
 
 $ship_to_info = '';
+$ship_to_info .= '<div style="border-top: 1px solid gray"></div><br /><b>' . _l('ship_to') . '</b>';
+
 // ship to to
 if ($estimate->include_shipping == 1 && $estimate->show_shipping_on_estimate == 1) {
-    $ship_to_info .= '<div style="border-top: 1px solid gray"></div><br /><b>' . _l('ship_to') . '</b>';
     $ship_to_info .= '<div style="color:#424242;">';
     $ship_to_info .= format_customer_info($estimate, 'estimate', 'shipping');
     $ship_to_info .= '</div><br><br>';
