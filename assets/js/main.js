@@ -7598,12 +7598,13 @@ function calculate_total() {
     }
 
     total += total_tax;
+    total_tax *= exchangeRateValue;
     total_tax = format_money(total_tax, false, optionalSymbol);
     $("#tax_id_" + slugify(taxname)).html(total_tax);
   });
+  total *= exchangeRateValue;
 
   total = total + subtotal;
-
   // Discount by percent
   if (
     discount_percent !== "" &&
