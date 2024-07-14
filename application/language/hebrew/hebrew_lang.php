@@ -3068,6 +3068,8 @@ $lang['item_report_paid_invoices_notice']        = 'דוח פריטים נוצר
 $lang['overview']                                = 'סקירה כללית';
 $lang['timer_started_change_status_in_progress'] = 'שנה את סטטוס המשימה לבעייתה בזמן שהטיימר התחיל (תקף רק אם סטטוס המשימה לא התחיל)';
 $lang['company_info_format']                     = 'פורמט מידע על החברה (PDF ו-HTML)';
+$lang['company_info_format_bottom_pdf']        = 'טקסט תחתון ל PDF';
+
 $lang['customer_info_format']                    = 'פורמט פרטי לקוח (PDF ו-HTML)';
 $lang['custom_field_info_format_embed_info']     = 'ניתן להטמיע בקלות שדות מותאמים אישית עבור %s במסמכי PDF ו-HTML על ידי הוספת שדות המיזוג לפורמט העמוד בעמוד הבא: %s';
 $lang['transfer_lead_notes_to_customer']         = 'העבר הערות לידים לפרופיל הלקוח';
