@@ -126,16 +126,27 @@
                     <h4 class="tw-font-semibold tw-text-neutral-700 invoice-html-number">
                         <?php echo e(format_invoice_number($invoice->id)); ?>
                     </h4>
+                  
+                    <?php hooks()->do_action('after_left_panel_invoicehtml', $invoice); ?>
+                </div>
+             
+
+            </div>
+            <div class="row">
+                <div class="col-md-12" >
                     <address class="invoice-html-company-info tw-text-neutral-500 tw-text-normal">
                         <?php echo format_organization_info(); ?>
                     </address>
-                    <?php hooks()->do_action('after_left_panel_invoicehtml', $invoice); ?>
                 </div>
-
             </div>
             <?php if ($invoice->shaam_number) : ?>
 
             <div class="row">
+                <div class="col-md-12" >
+                    <address class="invoice-html-company-info tw-text-neutral-500 tw-text-normal">
+                        <?php echo format_organization_info(); ?>
+                    </address>
+                </div>
                 <div class="col-md-12 text-center" >
                     <?= _l("invoice_shaam_number") ?>
                     <?php echo $invoice->shaam_number; ?>

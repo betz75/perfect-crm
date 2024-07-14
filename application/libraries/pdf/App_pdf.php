@@ -209,6 +209,9 @@ abstract class App_pdf extends TCPDF
             $this->SetTextColor(142, 142, 142);
             $this->Cell(0, 15, $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
         }
+
+        $this->writeHTML('<div style="text-align: center">'. get_option("company_info_format_bottom_pdf").'</div>');
+
     }
 
     public function fix_editor_html($content)

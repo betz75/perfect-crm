@@ -14,6 +14,8 @@
     <?php echo render_custom_fields('company', 0); ?>
     <hr />
     <?php echo render_textarea('settings[company_info_format]', 'company_info_format', clear_textarea_breaks(get_option('company_info_format')), ['rows' => 8, 'style' => 'line-height:20px;']); ?>
+    <?php echo render_textarea('settings[company_info_format_bottom_pdf]', 'company_info_format_bottom_pdf', clear_textarea_breaks(get_option('company_info_format_bottom_pdf')), ['rows' => 8, 'style' => 'line-height:20px;']); ?>
+
     <p>
         <a href="#" class="settings-textarea-merge-field" data-to="company_info_format">{company_name}</a>
         <a href="#" class="settings-textarea-merge-field" data-to="company_info_format">{address}</a>,

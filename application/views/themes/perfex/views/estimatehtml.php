@@ -130,9 +130,7 @@
                     </div>
                     <div class="col-md-6 col-sm-6 tw-text-end transaction-html-info-col-left">
                         <h4 class="bold estimate-html-number"><?php echo e(format_estimate_number($estimate->id)); ?></h4>
-                        <address class="estimate-html-company-info tw-text-neutral-500 tw-text-normal">
-                            <?php echo format_organization_info(); ?>
-                        </address>
+                        
                         <p class="estimate-html-date tw-mb-0 tw-text-normal">
                             <span class="tw-font-medium tw-text-neutral-700">
                                 <?php echo _l('estimate_data_date'); ?>:
@@ -147,6 +145,13 @@
                             <?php echo e(_d($estimate->expirydate)); ?>
                         </p>
                         <?php } ?>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <address class="estimate-html-company-info tw-text-neutral-500 tw-text-normal">
+                            <?php echo format_organization_info(); ?>
+                         </address>
                     </div>
                 </div>
                 <div class="row">
