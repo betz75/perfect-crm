@@ -59,7 +59,7 @@ if (!empty($invoice->duedate)) {
 }
 $invoice_info .= "</td></tr></table>";
 // ship to to
-$invoice_info .= '<div style="border-top:1px solid gray; height: 0px"></div>';
+$invoice_info .= '<br><div style="border-top:1px solid gray; height: 0px;"></div>';
 
 if ($invoice->include_shipping == 1 && $invoice->show_shipping_on_invoice == 1) {
     $invoice_info .= '<br /><b>' . _l('ship_to') . ':</b>';
