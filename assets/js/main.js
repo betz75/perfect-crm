@@ -7596,13 +7596,11 @@ function calculate_total() {
       var t = (discount_fixed / subtotal) * 100;
       total_tax = total_tax - (total_tax * t) / 100;
     }
-
-    total += total_tax;
     total_tax *= exchangeRateValue;
+    total += total_tax;
     total_tax = format_money(total_tax, false, optionalSymbol);
     $("#tax_id_" + slugify(taxname)).html(total_tax);
   });
-  total *= exchangeRateValue;
 
   total = total + subtotal;
   // Discount by percent
