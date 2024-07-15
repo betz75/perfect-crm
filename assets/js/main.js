@@ -7714,9 +7714,9 @@ function init_currency(id, callback) {
       currency
     ) {
       if (currency.name == "USD") {
-        $("#exchangeRateField:visible").val(currency.usd_to_ils);
+        $("#exchangeRateField").val(currency.usd_to_ils);
       } else if (currency.name == "EUR") {
-        $("#exchangeRateField:visible").val(currency.eur_to_ils);
+        $("#exchangeRateField").val(currency.eur_to_ils);
       }
       $(document.body).attr("data-selected-currency", currency.name);
       if (currency.name == "ILS") {
