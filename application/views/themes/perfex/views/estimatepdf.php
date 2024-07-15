@@ -4,20 +4,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 $dimensions = $pdf->getPageDimensions();
 
-$info_right_column = '';
+$text_left = "left";
+$text_right = "right";
+if (is_rtl()) {
+    $text_left = "right";
+    $text_right = "left";
+}
+
 $info_left_column  = '';
 
-$info_right_column .= '<span style="font-weight:bold;font-size:27px;">' . _l('estimate_pdf_heading') . '</span><br />';
-$info_right_column .= '<b style="color:#4e4e4e;"># ' . $estimate_number . '</b>';
-
-if (get_option('show_status_on_pdf_ei') == 1) {
-    $info_right_column .= '<br /><span style="color:rgb(' . estimate_status_color_pdf($status) . ');text-transform:uppercase;">' . format_estimate_status($status, '', false) . '</span>';
-}
 
 $info_left_column .= pdf_logo_url();
 
 
-$dates = '<br />' . _l('estimate_data_date') . ': ' . _d($estimate->date) . '<br />';
+$dates = _l('estimate_data_date') . ': ' . _d($estimate->date) . '<br />';
 
 if (!empty($estimate->expirydate)) {
     $dates .= _l('estimate_data_expiry_date') . ': ' . _d($estimate->expirydate) . '<br />';
@@ -39,7 +39,6 @@ $estimate_info .= format_customer_info($estimate, 'estimate', 'billing');
 $estimate_info .= '</div></div>';
 
 $ship_to_info = '';
-$ship_to_info .= '<div style="border-top: 1px solid gray"></div>';
 
 // ship to to
 if ($estimate->include_shipping == 1 && $estimate->show_shipping_on_estimate == 1) {
@@ -76,17 +75,29 @@ $right_info = $swap == '1' ? $organization_info : $estimate_info;
 //pdf_multi_row($left_info, $right_info, $pdf, ($dimensions['wk'] / 2) - $dimensions['lm']);
 
 // The Table
-$markup = '<table><tr><td align="right">';
-$markup .= $info_right_column;
-$markup .= $estimate_info;
+$markup = '<table><tr><td align="'.$text_left.'">';
 $markup .= $organization_info;
-
-$markup .= '</td><td align="left">';
+$markup .= '</td><td align="'.$text_right.'">';
 $markup .= $info_left_column;
+$markup .= '</td></tr></table>';
+$markup .= '<br><div style="border-top: 1px solid gray; height:0;"></div><br>';
+$markup .= '<table><tr><td align="'.$text_left.'">'.$estimate_info."<br>". $ship_to_info;
+$markup .= '</td><td align="'.$text_right.'">';
 $markup .= $dates;
 $markup .= '</td></tr></table>';
-$markup .= $ship_to_info;
+
 $pdf->writeHTML($markup, true, false, true, false, '');
+$estimate_number_section = '';
+
+$estimate_number_section .= '<div style="text-align: center">' . _l('estimate_pdf_heading') . '';
+$estimate_number_section .= '<b style="color:#4e4e4e;"># ' . $estimate_number . '</b>';
+
+if (get_option('show_status_on_pdf_ei') == 1) {
+    $estimate_number_section .= '<span style="color:rgb(' . estimate_status_color_pdf($status) . ');text-transform:uppercase;">' . format_estimate_status($status, '', false) . '</span>';
+}
+$estimate_number_section .= "</div><br>";
+
+$pdf->writeHTML($estimate_number_section, true, false, true, false, '');
 
 // The items table
 $items = get_items_table_data($estimate, 'estimate', 'pdf');
