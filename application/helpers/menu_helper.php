@@ -36,17 +36,17 @@ function app_init_admin_sidebar_menu_items()
         'badge'    => [],
     ]);
 
-    if ((staff_can('view',  'proposals') || staff_can('view_own',  'proposals'))
-        || (staff_has_assigned_proposals() && get_option('allow_staff_view_proposals_assigned') == 1)
-    ) {
-        $CI->app_menu->add_sidebar_children_item('sales', [
-            'slug'     => 'proposals',
-            'name'     => _l('proposals'),
-            'href'     => admin_url('proposals'),
-            'position' => 5,
-            'badge'    => [],
-        ]);
-    }
+    // if ((staff_can('view',  'proposals') || staff_can('view_own',  'proposals'))
+    //     || (staff_has_assigned_proposals() && get_option('allow_staff_view_proposals_assigned') == 1)
+    // ) {
+    //     $CI->app_menu->add_sidebar_children_item('sales', [
+    //         'slug'     => 'proposals',
+    //         'name'     => _l('proposals'),
+    //         'href'     => admin_url('proposals'),
+    //         'position' => 5,
+    //         'badge'    => [],
+    //     ]);
+    // }
 
     if ((staff_can('view',  'estimates') || staff_can('view_own',  'estimates'))
         || (staff_has_assigned_estimates() && get_option('allow_staff_view_estimates_assigned') == 1)
