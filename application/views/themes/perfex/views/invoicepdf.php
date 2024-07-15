@@ -12,38 +12,29 @@ if (is_rtl()) {
 }
 
 $table = '<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>';
-$info_right_column = '';
 $info_left_column  = '';
 
-$info_right_column .= '<td width="50%"><span style="font-weight:bold;font-size:27px;">' . _l('invoice_pdf_heading') . '</span><br />';
-$info_right_column .= '<b style="color:#4e4e4e;"># ' . $invoice_number . '</b>';
+$info_right_column = '<td align="'.$text_left.'" width="50%"><div style="color:#424242;">';
 
-if (get_option('show_status_on_pdf_ei') == 1) {
-    $info_right_column .= '<br /><span style="color:rgb(' . invoice_status_color_pdf($status) . ');text-transform:uppercase;">' . format_invoice_status($status, '', false) . '</span>';
-}
+$info_right_column .= format_organization_info();
 
-if ($status != Invoices_model::STATUS_PAID && $status != Invoices_model::STATUS_CANCELLED && get_option('show_pay_link_to_invoice_pdf') == 1
-    && found_invoice_mode($payment_modes, $invoice->id, false)) {
-    $info_right_column .= ' - <a style="color:#84c529;text-decoration:none;text-transform:uppercase;" href="' . site_url('invoice/' . $invoice->id . '/' . $invoice->hash) . '"><1b>' . _l('view_invoice_pdf_link_pay') . '</1b></a>';
-}
-$info_right_column .= "</td>";
+$info_right_column .= '</div></td>';
+
+$info_right_column = hooks()->apply_filters('invoicepdf_organization_info', $info_right_column, $invoice);
+
 // Add logo
 $info_left_column .= '<td width="50%" align="'.$text_right.'">'.pdf_logo_url(). '</td>';
 $table .= $info_right_column.$info_left_column; 
 $table .= "</tr></table>";
 $pdf->writeHTML($table, true, false, false, false);
+$border = '<br><div style="border-top:1px solid gray; height: 0px;"></div><br>';
+$pdf->writeHTML($border, true, false, false, false);
 
-$pdf->ln(10);
 
-$organization_info = '<div style="color:#424242;">';
 
-$organization_info .= format_organization_info();
-
-$organization_info .= '</div>';
 
 // Bill to
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+
 $invoice_info = '<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td width="50%" align="'.$text_left.'">';
 $invoice_info .= '<b>' . _l('invoice_bill_to') . ':</b>';
 $invoice_info .= '<div style="color:#424242;">';
@@ -59,7 +50,6 @@ if (!empty($invoice->duedate)) {
 }
 $invoice_info .= "</td></tr></table>";
 // ship to to
-$invoice_info .= '<br><div style="border-top:1px solid gray; height: 0px;"></div>';
 
 if ($invoice->include_shipping == 1 && $invoice->show_shipping_on_invoice == 1) {
     $invoice_info .= '<br /><b>' . _l('ship_to') . ':</b>';
@@ -87,14 +77,27 @@ foreach ($pdf_custom_fields as $field) {
 }
 
 $invoice_info      = hooks()->apply_filters('invoice_pdf_header_after_custom_fields', $invoice_info, $invoice);
-$organization_info = hooks()->apply_filters('invoicepdf_organization_info', $organization_info, $invoice);
 $invoice_info      = hooks()->apply_filters('invoice_pdf_info', $invoice_info, $invoice);
 
-$left_info  = $swap == '1' ? $invoice_info : $organization_info;
-$right_info = $swap == '1' ? $organization_info : $invoice_info;
 
-$pdf->writeHTML($right_info, true, false, false, false, $text_left);
-$pdf->writeHTML($left_info, true, false, false, false, $text_left);
+
+$pdf->writeHTML($invoice_info, true, false, false, false, $text_left);
+$info_invoice_number_section = '';
+
+$info_invoice_number_section .= '<div style="text-align: center">' . _l('invoice_pdf_heading') . ' ';
+$info_invoice_number_section .= '<b style="color:#4e4e4e;"># ' . $invoice_number . '</b>';
+
+if (get_option('show_status_on_pdf_ei') == 1) {
+    $info_invoice_number_section .= ' <span style="color:rgb(' . invoice_status_color_pdf($status) . ');text-transform:uppercase;">' . format_invoice_status($status, '', false) . '</span>';
+}
+
+if ($status != Invoices_model::STATUS_PAID && $status != Invoices_model::STATUS_CANCELLED && get_option('show_pay_link_to_invoice_pdf') == 1
+    && found_invoice_mode($payment_modes, $invoice->id, false)) {
+    $info_invoice_number_section .= ' - <a style="color:#84c529;text-decoration:none;text-transform:uppercase;" href="' . site_url('invoice/' . $invoice->id . '/' . $invoice->hash) . '"><1b>' . _l('view_invoice_pdf_link_pay') . '</1b></a>';
+}
+$info_invoice_number_section .= "</div>";
+$pdf->writeHTML($info_invoice_number_section, true, false, false, false, $text_left);
+
 if ($invoice->shaam_number) {
 $sham = '<div style="text-align: center;">'._l("invoice_shaam_number"). " ". $invoice->shaam_number."</div>";
 $pdf->writeHTML($sham, true, false, false, false, $text_left);
