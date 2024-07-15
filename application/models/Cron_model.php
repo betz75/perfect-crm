@@ -1960,7 +1960,7 @@ class Cron_model extends App_Model
     }
 
     private function refreshShamAccessToken() {
-        $last_time = get_option('last_cron_run');
+        $last_time = (int)get_option('last_cron_run');
         $diff = time() - $last_time;
         if ($diff < 36000) {
             return;
@@ -1970,7 +1970,7 @@ class Cron_model extends App_Model
         $sham_service->getAccessToekn();  
     }
     private function getExchangeRates() {
-        $last_time = get_option('last_cron_run_exchangerate');
+        $last_time = (int)get_option('last_cron_run_exchangerate');
         $diff = time() - $last_time;
         if ($last_time && $diff < 3600 * 24) {
             return;
