@@ -41,7 +41,7 @@ $estimate_info .= '</div></div>';
 $ship_to_info = '';
 
 // ship to to
-if ($estimate->include_shipping == 1 && $estimate->show_shipping_on_estimate == 1) {
+if (FALSE && $estimate->include_shipping == 1 && $estimate->show_shipping_on_estimate == 1) {
     $ship_to_info .= '<br /><b>' . _l('ship_to') . '</b>';
 
     $ship_to_info .= '<div style="color:#424242;">';

@@ -51,7 +51,7 @@ if (!empty($invoice->duedate)) {
 $invoice_info .= "</td></tr></table>";
 // ship to to
 
-if ($invoice->include_shipping == 1 && $invoice->show_shipping_on_invoice == 1) {
+if (false && $invoice->include_shipping == 1 && $invoice->show_shipping_on_invoice == 1) {
     $invoice_info .= '<br /><b>' . _l('ship_to') . ':</b>';
     $invoice_info .= '<div style="color:#424242;">';
     $invoice_info .= format_customer_info($invoice, 'invoice', 'shipping');
