@@ -228,7 +228,7 @@
                         <div class="col-md-6">
                             <?php
 
-                        $currency_attr = ['disabled' => true, 'data-show-subtext' => true];
+                        $currency_attr = ['data-show-subtext' => true];
                         $currency_attr = apply_filters_deprecated('estimate_currency_disabled', [$currency_attr], '2.3.0', 'estimate_currency_attributes');
                         foreach ($currencies as $currency) {
                             if ($currency['isdefault'] == 1) {
@@ -309,7 +309,18 @@
     </div>
 
     <hr class="hr-panel-separator" />
-
+    <div class="row exchange_rate_global tw-p-6">
+        <div class="col-md-5 tw-flex tw-items-center">
+            <label class="tw-flex tw-items-center" >
+                <input type='checkbox' name="exchange_rate_toggl" id="exchangeRateToggl" checked> <span>&nbsp;&nbsp;<?= _l("exchange_invoice_to_shekels") ?></span>
+             </label>
+            <label class="tw-flex tw-items-center"  id="exchangeRateLabel">
+                <div class="!tw-w-28">&nbsp; | <?= _l('invoice_currency_exchange_rate') ?>:</div>
+                <input type="number" class="form-control" name="exchange_rate" id="exchangeRateField">
+             </label>
+             
+        </div>
+    </div>
     <?php $this->load->view('admin/estimates/_add_edit_items'); ?>
 
     <hr class="hr-panel-separator" />
