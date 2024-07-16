@@ -169,9 +169,34 @@
                                 class="tw-font-medium tw-text-neutral-700"><?php echo _l('sale_agent_string'); ?>:</span>
                             <?php echo e(get_staff_full_name($estimate->sale_agent)); ?>
                         </p>
+                        <?php
+                            $exchange_rate = null;
+                            $currency = $estimate->currency_name;
+                            if ($estimate->exchange_rate) {
+                                $currency = "ILS";
+                                $exchange_rate = $estimate->exchange_rate;
+                            }
+                        ?>
                     <div class="col-md-6">
                         <table class="table tw-text-start tw-text-normal">
                             <tbody>
+                                <?php if ($exchange_rate) : ?>
+                                            <tr id="before_exchange" >
+                                                <td>
+                                                    <span class="bold tw-text-neutral-700"><?php echo _l('invoice_amount_before_exchange'); ?></span>
+                                                </td>
+                                                <td class="subtotal tw-text-end">
+                                                    <?php echo e(app_format_money($estimate->total / $exchange_rate, $estimate->currency_name)); ?>
+                                                </td>
+                                            </tr> <tr id="exchange_rate">
+                                                <td>
+                                                    <span class="bold tw-text-neutral-700"><?php echo _l('invoice_exchange_rate_value'); ?></span>
+                                                </td>
+                                                <td class="subtotal tw-text-end">
+                                                    <?php echo e(app_format_money($exchange_rate, $currency)); ?>
+                                                </td>
+                                            </tr>
+                                 <?php endif; ?>
                                 <tr id="subtotal">
                                     <td>
                                         <span class="bold tw-text-neutral-700">
@@ -179,7 +204,7 @@
                                         </span>
                                     </td>
                                     <td class="subtotal tw-text-end">
-                                        <?php echo e(app_format_money($estimate->subtotal, $estimate->currency_name)); ?>
+                                        <?php echo e(app_format_money($estimate->subtotal, $currency)); ?>
                                     </td>
                                 </tr>
                                 <?php if (is_sale_discount_applied($estimate)) { ?>
@@ -192,13 +217,13 @@
                                         </span>
                                     </td>
                                     <td class="discount tw-text-end">
-                                        <?php echo e('-' . app_format_money($estimate->discount_total, $estimate->currency_name)); ?>
+                                        <?php echo e('-' . app_format_money($estimate->discount_total, $currency)); ?>
                                     </td>
                                 </tr>
                                 <?php } ?>
                                 <?php
                                     foreach ($items->taxes() as $tax) {
-                                        echo '<tr class="tax-area"><td class="bold !tw-text-neutral-700">' . e($tax['taxname']) . ' (' . e(app_format_number($tax['taxrate'])) . '%)</td><td class=" tw-text-end">' . e(app_format_money($tax['total_tax'], $estimate->currency_name)) . '</td></tr>';
+                                        echo '<tr class="tax-area"><td class="bold !tw-text-neutral-700">' . e($tax['taxname']) . ' (' . e(app_format_number($tax['taxrate'])) . '%)</td><td class=" tw-text-end">' . e(app_format_money($tax['total_tax'] * $exchange_rate, $currency)) . '</td></tr>';
                                     }
                                 ?>
                                 <?php if ((int)$estimate->adjustment != 0) { ?>
@@ -209,7 +234,7 @@
                                         </span>
                                     </td>
                                     <td class="adjustment tw-text-end">
-                                        <?php echo e(app_format_money($estimate->adjustment, $estimate->currency_name)); ?>
+                                        <?php echo e(app_format_money($estimate->adjustment, $currency)); ?>
                                     </td>
                                 </tr>
                                 <?php } ?>
@@ -220,7 +245,7 @@
                                         </span>
                                     </td>
                                     <td class="total tw-text-end">
-                                        <?php echo e(app_format_money($estimate->total, $estimate->currency_name)); ?>
+                                        <?php echo e(app_format_money($estimate->total, $currency)); ?>
                                     </td>
                                 </tr>
                             </tbody>
@@ -231,7 +256,7 @@
                     <div class="col-md-12 text-center estimate-html-total-to-words">
                         <p class="tw-font-medium">
                             <?php echo _l('num_word'); ?>:<span class="tw-text-neutral-500">
-                                <?php echo $this->numberword->convert($estimate->total, $estimate->currency_name); ?>
+                                <?php echo $this->numberword->convert($estimate->total, $currency); ?>
                             </span>
                         </p>
                     </div>

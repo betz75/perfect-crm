@@ -517,7 +517,7 @@ class Invoices_model extends App_Model
                 }
             }
 
-            update_sales_total_tax_column($insert_id, 'invoice', db_prefix() . 'invoices');
+            update_sales_total_tax_column($insert_id, 'invoice', db_prefix() . 'invoices', true);
 
             if (!DEFINED('CRON') && $expense == false) {
                 $lang_key = 'invoice_activity_created';
@@ -898,7 +898,7 @@ class Invoices_model extends App_Model
         }
 
         if ($updated) {
-            update_sales_total_tax_column($id, 'invoice', db_prefix() . 'invoices');
+            update_sales_total_tax_column($id, 'invoice', db_prefix() . 'invoices', true);
             update_invoice_status($id);
         }
 

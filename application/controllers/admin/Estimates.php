@@ -82,13 +82,20 @@ class Estimates extends AdminController
                 unset($estimate_data['save_and_send_later']);
                 $save_and_send_later = true;
             }
-
+            $exchange_rate = $estimate_data['exchange_rate'] ?? null;
+            if (!($estimate_data['exchange_rate_toggl'] ?? null)) {
+                $exchange_rate = null;
+            }
+            unset($estimate_data['exchange_rate_toggl']);
+            $estimate_data['exchange_rate'] = $exchange_rate;
             if ($id == '') {
                 if (staff_cant('create', 'estimates')) {
                     access_denied('estimates');
                 }
-                $id = $this->estimates_model->add($estimate_data);
 
+              
+                
+                $id = $this->estimates_model->add($estimate_data);
                 if ($id) {
                     set_alert('success', _l('added_successfully', _l('estimate')));
 
@@ -117,6 +124,8 @@ class Estimates extends AdminController
                     redirect(admin_url('estimates/list_estimates/' . $id));
                 }
             }
+          
+
         }
         if ($id == '') {
             $title = _l('create_new_estimate');

@@ -170,6 +170,20 @@
     <div class="col-md-8 col-md-offset-4">
         <table class="table text-right">
             <tbody>
+                <tr id="amountBeforeExchange" class='exchange-rate-hide'>
+                    <td>
+                        <span class="bold tw-text-neutral-700"><?php echo _l('invoice_amount_before_exchange'); ?> :</span>
+                    </td>
+                    <td class="amount-before-exchange">
+                    </td>
+                </tr>
+                <tr id="exchangeRate" class='exchange-rate-hide'>
+                    <td>
+                        <span class="bold tw-text-neutral-700"><?php echo _l('invoice_exchange_rate_value'); ?> :</span>
+                    </td>
+                    <td class="exchange-rate">
+                    </td>
+                </tr>
                 <tr id="subtotal">
                     <td><span class="bold tw-text-neutral-700"><?php echo _l('estimate_subtotal'); ?> :</span>
                     </td>

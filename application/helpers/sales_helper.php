@@ -559,10 +559,14 @@ function get_items_by_type($type, $id)
 * @param  mixed $id
 * @return void
 */
-function update_sales_total_tax_column($id, $type, $table)
+function update_sales_total_tax_column($id, $type, $table, $include_exchange = false)
 {
     $CI = &get_instance();
-    $CI->db->select('discount_percent, discount_type, discount_total, subtotal');
+    $exchange_rate_field = '';
+    if ($include_exchange) {
+        $exchange_rate_field = ", exchange_rate";
+    }
+    $CI->db->select('discount_percent, discount_type, discount_total, subtotal'. $exchange_rate_field);
     $CI->db->from($table);
     $CI->db->where('id', $id);
 
@@ -611,7 +615,8 @@ function update_sales_total_tax_column($id, $type, $table)
         }
         $total_tax += $total;
     }
-
+    $exchange_rate = ($data->exchange_rate ?? 0) ? $data->exchange_rate : 1;
+    $total_tax *= (float)$exchange_rate;
     $CI->db->where('id', $id);
     $CI->db->update($table, [
             'total_tax' => $total_tax,
