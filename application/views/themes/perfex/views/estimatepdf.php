@@ -105,18 +105,36 @@ $items = get_items_table_data($estimate, 'estimate', 'pdf');
 $tblhtml = $items->table();
 
 $pdf->writeHTML($tblhtml, true, false, false, false, '');
+$agent = '';
 if ($estimate->sale_agent && get_option('show_sale_agent_on_estimates') == 1) {
     $agent .= _l('sale_agent_string') . ': ' . get_staff_full_name($estimate->sale_agent) . '<br />';
     $pdf->writeHTML($agent, true, false, false, false, '');
-
+}
+$exchange_rate = null;
+$currency = $estimate->currency_name;
+if ($estimate->exchange_rate) {
+    $currency = "ILS";
+    $exchange_rate = $estimate->exchange_rate;
 }
 $pdf->Ln(8);
 $tbltotal = '';
 $tbltotal .= '<table cellpadding="6" style="font-size:' . ($font_size + 4) . 'px">';
+if ($exchange_rate) {
+$tbltotal .= '
+    <tr>
+        <td align="right" width="85%"><strong>' . _l('estimate_subtotal') . '</strong></td>
+        <td align="right" width="15%">' . app_format_money($estimate->total / $exchange_rate, $estimate->currency) . '</td>
+    </tr>';
+    $tbltotal .= '
+    <tr>
+        <td align="right" width="85%"><strong>' . _l('estimate_subtotal') . '</strong></td>
+        <td align="right" width="15%">' . app_format_money($exchange_rate, $currency) . '</td>
+    </tr>';
+}
 $tbltotal .= '
 <tr>
     <td align="right" width="85%"><strong>' . _l('estimate_subtotal') . '</strong></td>
-    <td align="right" width="15%">' . app_format_money($estimate->subtotal, $estimate->currency_name) . '</td>
+    <td align="right" width="15%">' . app_format_money($estimate->subtotal, $currency) . '</td>
 </tr>';
 
 if (is_sale_discount_applied($estimate)) {
@@ -128,28 +146,28 @@ if (is_sale_discount_applied($estimate)) {
     }
     $tbltotal .= '</strong>';
     $tbltotal .= '</td>';
-    $tbltotal .= '<td align="right" width="15%">-' . app_format_money($estimate->discount_total, $estimate->currency_name) . '</td>
+    $tbltotal .= '<td align="right" width="15%">-' . app_format_money($estimate->discount_total, $currency) . '</td>
     </tr>';
 }
 
 foreach ($items->taxes() as $tax) {
     $tbltotal .= '<tr>
     <td align="right" width="85%"><strong>' . $tax['taxname'] . ' (' . app_format_number($tax['taxrate']) . '%)' . '</strong></td>
-    <td align="right" width="15%">' . app_format_money($tax['total_tax'], $estimate->currency_name) . '</td>
+    <td align="right" width="15%">' . app_format_money($tax['total_tax'], $currency) . '</td>
 </tr>';
 }
 
 if ((int)$estimate->adjustment != 0) {
     $tbltotal .= '<tr>
     <td align="right" width="85%"><strong>' . _l('estimate_adjustment') . '</strong></td>
-    <td align="right" width="15%">' . app_format_money($estimate->adjustment, $estimate->currency_name) . '</td>
+    <td align="right" width="15%">' . app_format_money($estimate->adjustment, $currency) . '</td>
 </tr>';
 }
 
 $tbltotal .= '
 <tr style="background-color:#f0f0f0;">
     <td align="right" width="85%"><strong>' . _l('estimate_total') . '</strong></td>
-    <td align="right" width="15%">' . app_format_money($estimate->total, $estimate->currency_name) . '</td>
+    <td align="right" width="15%">' . app_format_money($estimate->total, $currency) . '</td>
 </tr>';
 
 $tbltotal .= '</table>';
@@ -159,7 +177,7 @@ $pdf->writeHTML($tbltotal, true, false, false, false, '');
 if (get_option('total_to_words_enabled') == 1) {
     // Set the font bold
     $pdf->SetFont($font_name, 'B', $font_size);
-    $pdf->writeHTMLCell('', '', '', '', _l('num_word') . ': ' . $CI->numberword->convert($estimate->total, $estimate->currency_name), 0, 1, false, true, 'C', true);
+    $pdf->writeHTMLCell('', '', '', '', _l('num_word') . ': ' . $CI->numberword->convert($estimate->total, $currency), 0, 1, false, true, 'C', true);
     // Set the font again to normal like the rest of the pdf
     $pdf->SetFont($font_name, '', $font_size);
     $pdf->Ln(4);
