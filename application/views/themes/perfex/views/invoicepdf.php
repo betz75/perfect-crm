@@ -155,7 +155,7 @@ if (is_sale_discount_applied($invoice)) {
 foreach ($items->taxes() as $tax) {
     $tbltotal .= '<tr>
     <td width="85%"><strong>' . $tax['taxname'] . ' (' . app_format_number($tax['taxrate']) . '%)' . '</strong></td>
-    <td width="15%">' . app_format_money($tax['total_tax'], $currency) . '</td>
+    <td width="15%">' . app_format_money($tax['total_tax'] * $exchange_rate, $currency) . '</td>
 </tr>';
 }
 
