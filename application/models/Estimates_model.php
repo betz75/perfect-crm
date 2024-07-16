@@ -545,7 +545,7 @@ class Estimates_model extends App_Model
                 }
             }
 
-            update_sales_total_tax_column($insert_id, 'estimate', db_prefix() . 'estimates');
+            update_sales_total_tax_column($insert_id, 'estimate', db_prefix() . 'estimates', true);
             $this->log_estimate_activity($insert_id, 'estimate_activity_created');
 
             hooks()->do_action('after_estimate_added', $insert_id);
@@ -766,7 +766,7 @@ class Estimates_model extends App_Model
         }
 
         if ($affectedRows > 0) {
-            update_sales_total_tax_column($id, 'estimate', db_prefix() . 'estimates');
+            update_sales_total_tax_column($id, 'estimate', db_prefix() . 'estimates', true);
         }
 
         if ($save_and_send === true) {
