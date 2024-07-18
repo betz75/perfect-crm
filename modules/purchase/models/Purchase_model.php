@@ -4422,13 +4422,12 @@ class Purchase_model extends App_Model
         <tbody>
           <tr>
             <td width="50%">'.format_organization_info().'
-      <br>
+   
 
             </td>
-            <td class="text-right" style="width: 50%">
-            '.get_po_logo(get_option('pdf_logo_width'), "img img-responsive").'
+            <td align="left" style="width: 50%">'.get_po_logo(get_option('pdf_logo_width'), "img img-responsive").'
 
-      <br>
+      <br>   <br>
             </td>
           </tr>
             <tr>
