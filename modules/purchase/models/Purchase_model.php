@@ -4421,47 +4421,47 @@ class Purchase_model extends App_Model
     $html .= '<table class="table">
         <tbody>
           <tr>
-            <td rowspan="6" class="text-left" style="width: 70%">
-            '.get_po_logo(get_option('pdf_logo_width'), "img img-responsive").'
-             <br>'.format_organization_info().'
+            <td width="50%">'.format_organization_info().'
+   
+
             </td>
-            <td class="text-right" style="width: 30%">
-                <strong class="fsize20">'.mb_strtoupper(_l('purchase_order')).'</strong><br>
-                <strong>'.mb_strtoupper($pur_order->pur_order_number).'</strong><br>
+            <td align="left" style="width: 50%">'.get_po_logo(get_option('pdf_logo_width'), "img img-responsive").'
+
+      <br>   <br>
             </td>
           </tr>
-
+            <tr>
+            <td colspan="2" width="100%" style="border-top: 1px solid gray">
+            
+            </td>
+            </tr>
           <tr>
-            <td class="text-right" style="width: 30%">
+            <td >
+                 
                 <br><strong>'._l('pur_vendor').'</strong>    
                 <br>'. $vendor_name.'
                 <br>'. strip_tags($address).'
             </td>
-            <td></td>
+            <td align="left">
+            '. _l('order_date').': '. $day.'
+            </td>
           </tr>
 
+      
+  
+
           <tr>
-            <td></td>
-          </tr>
-          <tr>
-            <td class="text-right" style="width: 30%">
-                <br><strong>'._l('pur_ship_to').'</strong>    
-                <br>'. strip_tags($ship_to).'
+            <td colspan="2" align="center" width="100%">
+            <br><br>
+                 <strong >'.mb_strtoupper(_l('purchase_order')).'</strong>
+                <strong>'.mb_strtoupper($pur_order->pur_order_number).'</strong>
                 </td>
-            <td></td>
           </tr>
-
-          <tr>
-            <td></td>
-          </tr>
-          <tr>
-            <td class="text-right">'. _l('order_date').': '. $day.'</td>
-            <td></td>
-          </tr>
+        
         </tbody>
 
       </table>
-      <br><br><br>
+      <br><br>
       ';
 
       $html .=  '<table class="table purorder-item">
@@ -4510,46 +4510,47 @@ class Purchase_model extends App_Model
       </table><br><br>';
 
       $html .= '<table class="table text-right"><tbody>';
-      $html .= '<tr id="subtotal">
-                    <td style="width: 33%"></td>
+      $html .= '<tr>
                      <td>'._l('subtotal').' </td>
-                     <td class="subtotal">
+                     <td class="subtotal" style="text-align:left">
                         '.app_format_money($pur_order->subtotal,$base_currency->symbol).'
                      </td>
-                  </tr>';
+                  </tr>
+                                  <tr><td colspan="2" style="border-top: 1px solid gray" width="100%"></td></tr>
+';
 
       $html .= $tax_data['pdf_html'];
 
       if(($pur_order->discount_total + $item_discount) > 0){
         $html .= '
-                  
-                  <tr id="subtotal">
-                  <td style="width: 33%"></td>
+                  <tr>
                      <td>'._l('discount_total(money)').'</td>
-                     <td class="subtotal">
+                     <td class="subtotal" style="text-align:left">
                         '.app_format_money(($pur_order->discount_total + $item_discount), $base_currency->symbol).'
                      </td>
-                  </tr>';
+                  </tr>
+                                    <tr><td colspan="2" style="border-top: 1px solid gray" width="100%"></td></tr>
+';
       }
 
       if($pur_order->shipping_fee  > 0){
-        $html .= '
-                  
-                  <tr id="subtotal">
-                  <td style="width: 33%"></td>
+        $html .= '<tr><td colspan="2" style="border-top: 1px solid gray" width="100%"></td></tr>
+                  <tr>
                      <td>'._l('pur_shipping_fee').'</td>
-                     <td class="subtotal">
+                     <td class="subtotal"  style="text-align: left">
                         '.app_format_money($pur_order->shipping_fee, $base_currency->symbol).'
                      </td>
-                  </tr>';
+                  </tr>
+                                    <tr><td colspan="2" style="border-top: 1px solid gray" width="100%"></td></tr>
+';
       }
-      $html .= '<tr id="subtotal">
-                 <td style="width: 33%"></td>
-                 <td>'. _l('total').'</td>
-                 <td class="subtotal">
-                    '. app_format_money($pur_order->total, $base_currency->symbol).'
-                 </td>
-              </tr>';
+      $html .= '
+                <tr >
+                    <td>'. _l('total').'</td>
+                     <td class="subtotal" style="text-align: left">'. app_format_money($pur_order->total, $base_currency->symbol).'</td>
+                </tr>
+                 <tr><td colspan="2" style="border-top: 1px solid gray" width="100%"></td></tr>
+';
 
       $html .= ' </tbody></table><br><br>';
 
@@ -4563,9 +4564,14 @@ class Purchase_model extends App_Model
       } 
 
       $html .= '<div class="col-md-12 mtop15">
-                        <h4>'. _l('terms_and_conditions').':</h4><p>'. $pur_order->terms .'</p>
+                        <h4>'. _l('vendor_note').':</h4><p>'. $pur_order->vendornote .'</p>
                        
                      </div>';
+
+                     $html .= '<div class="col-md-12 mtop15">
+                     <h4>'. _l('terms_and_conditions').':</h4><p>'. $pur_order->terms .'</p>
+                    
+                  </div>';
       if(count($list_approve_status) > 0){
           $html .= '<br>
           <br>

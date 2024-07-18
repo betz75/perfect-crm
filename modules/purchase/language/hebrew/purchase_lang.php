@@ -56,6 +56,9 @@ $lang['coppy_pur_request'] = 'העתק בקשת רכישה לאומדן טבלת
 $lang['please_chose_pur_request'] = 'אנא בחר בקשת רכישה תחילה!';
 $lang['purchase_order'] = 'הזמנת רכש';
 $lang['discount(%)'] = 'הנחה';
+$lang['discount'] = 'הנחה';
+$lang['amount'] = 'סכום';
+
 $lang['discount(money)'] = 'הנחה(כסף)';
 $lang['pur_order_name'] = 'שם הזמנת רכש';
 $lang['pur_order_number'] = 'מספר הזמנת רכש';

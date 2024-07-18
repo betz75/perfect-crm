@@ -422,17 +422,17 @@
                               <thead>
                                  <tr>
                                     <th align="center">#</th>
-                                    <th class="description" width="50%" align="left"><?php echo _l('items'); ?></th>
-                                    <th align="right"><?php echo _l('purchase_quantity'); ?></th>
-                                    <th align="right"><?php echo _l('purchase_unit_price'); ?></th>
-                                    <th align="right"><?php echo _l('into_money'); ?></th>
+                                    <th class="description" width="50%"><?php echo _l('items'); ?></th>
+                                    <th ><?php echo _l('purchase_quantity'); ?></th>
+                                    <th ><?php echo _l('purchase_unit_price'); ?></th>
+                                    <th ><?php echo _l('into_money'); ?></th>
                                     <?php if(get_option('show_purchase_tax_column') == 1){ ?>
-                                    <th align="right"><?php echo _l('tax'); ?></th>
+                                    <th ><?php echo _l('tax'); ?></th>
                                     <?php } ?>
-                                    <th align="right"><?php echo _l('sub_total'); ?></th>
-                                    <th align="right"><?php echo _l('discount(%)'); ?></th>
-                                    <th align="right"><?php echo _l('discount(money)'); ?></th>
-                                    <th align="right"><?php echo _l('total'); ?></th>
+                                    <th ><?php echo _l('sub_total'); ?></th>
+                                    <th ><?php echo _l('discount(%)'); ?></th>
+                                    <th ><?php echo _l('discount(money)'); ?></th>
+                                    <th ><?php echo _l('total'); ?></th>
                                  </tr>
                               </thead>
                               <tbody class="ui-sortable">
@@ -444,7 +444,7 @@
                                  foreach($estimate_detail as $es) { ?>
                                  <tr nobr="true" class="sortable">
                                     <td class="dragger item_no ui-sortable-handle" align="center"><?php echo pur_html_entity_decode($count); ?></td>
-                                    <td class="description" align="left;"><span><strong><?php 
+                                    <td class="description" ><span><strong><?php 
                                     $item = get_item_hp($es['item_code']); 
                                     if(isset($item) && isset($item->commodity_code) && isset($item->description)){
                                        echo pur_html_entity_decode($item->commodity_code.' - '.$item->description);
@@ -452,16 +452,16 @@
                                        echo pur_html_entity_decode($es['item_name']);
                                     }
                                     ?></strong><?php if($es['description'] != ''){ ?><br><span><?php echo pur_html_entity_decode($es['description']); ?></span><?php } ?></td>
-                                    <td align="right"  width="12%"><?php echo pur_html_entity_decode($es['quantity']); ?></td>
-                                    <td align="right"><?php echo app_format_money($es['unit_price'],$base_currency->symbol); ?></td>
-                                    <td align="right"><?php echo app_format_money($es['into_money'],$base_currency->symbol); ?></td>
+                                    <td  width="12%"><?php echo pur_html_entity_decode($es['quantity']); ?></td>
+                                    <td ><?php echo app_format_money($es['unit_price'],$base_currency->symbol); ?></td>
+                                    <td ><?php echo app_format_money($es['into_money'],$base_currency->symbol); ?></td>
                                     <?php if(get_option('show_purchase_tax_column') == 1){ ?>
-                                    <td align="right"><?php echo app_format_money(($es['total'] - $es['into_money']),$base_currency->symbol); ?></td>
+                                    <td><?php echo app_format_money(($es['total'] - $es['into_money']),$base_currency->symbol); ?></td>
                                     <?php } ?>
-                                    <td class="amount" align="right"><?php echo app_format_money($es['total'],$base_currency->symbol); ?></td>
-                                    <td class="amount" width="12%" align="right"><?php echo ($es['discount_%'].'%'); ?></td>
-                                    <td class="amount" align="right"><?php echo app_format_money($es['discount_money'],$base_currency->symbol); ?></td>
-                                    <td class="amount" align="right"><?php echo app_format_money($es['total_money'],$base_currency->symbol); ?></td>
+                                    <td class="amount"><?php echo app_format_money($es['total'],$base_currency->symbol); ?></td>
+                                    <td class="amount" width="12%"><?php echo ($es['discount_%'].'%'); ?></td>
+                                    <td class="amount"><?php echo app_format_money($es['discount_money'],$base_currency->symbol); ?></td>
+                                    <td class="amount"><?php echo app_format_money($es['total_money'],$base_currency->symbol); ?></td>
                                  </tr>
                               <?php 
                               $t_mn += $es['total_money'];
