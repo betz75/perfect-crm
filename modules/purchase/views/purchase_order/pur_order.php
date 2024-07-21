@@ -416,14 +416,12 @@
               </tr>
               <tr id="" class="exchange-rate-block">
                 <td><span class="bold"><?php echo _l('exchange_rate'); ?> :</span>
-                  <?php echo form_hidden('total_mn', ''); ?>
                 </td>
                 <td class="wh-exchange-rate">
                 </td>
               </tr>
               <tr id="exchangeRateLast" class="exchange-rate-block">
                 <td><span class="bold"><?php echo _l('total_ils'); ?> :</span>
-                  <?php echo form_hidden('total_mn', ''); ?>
                 </td>
                 <td class="wh-after-conversion">
                 </td>

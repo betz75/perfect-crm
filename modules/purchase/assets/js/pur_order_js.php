@@ -46,17 +46,19 @@ $(function(){
           if(response.currency_rate != 1){
             $('#currency_rate_div').removeClass('hide');
 
-            $('input[name="currency_rate"]').val(response.currency_rate).change();
+          //  $('input[name="currency_rate"]').val(response.currency_rate).change();
             $("#currency_rate_visible").val(Math.round(1 / response.currency_rate * 100) / 100);
             $('#convert_str').html(response.convert_str);
             $('.th_currency').html(response.currency_name);
           }else{
-            $('input[name="currency_rate"]').val(response.currency_rate).change();
+          //  $('input[name="currency_rate"]').val(response.currency_rate).change();
             $('#currency_rate_div').addClass('hide');
             $('#convert_str').html(response.convert_str);
             $('.th_currency').html(response.currency_name);
 
           }
+          pur_calculate_total();
+
 
         });
       }else{
@@ -658,7 +660,13 @@ function init_po_currency(id, callback) {
                 accounting.settings.currency.thousand = currency.thousand_separator;
                 accounting.settings.currency.symbol = currency.symbol;
                 accounting.settings.currency.format = currency.placement == 'after' ? '%v %s' : '%s%v';
+                if (currency.name == "USD") {
+                  $("#currency_rate_visible").val(currency.usd_to_ils).trigger("change");
 
+                }
+                if (currency.name == "EUR") {
+                  $("#currency_rate_visible").val(currency.eur_to_ils).trigger("change");
+                }
                 pur_calculate_total();
 
                 if(callback) {
