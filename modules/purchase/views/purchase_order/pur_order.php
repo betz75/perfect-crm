@@ -371,7 +371,9 @@
                 if(isset($pur_order) && $pur_order->currency != 0){
                   $currency_rate = pur_get_currency_rate($base_currency->name, $po_currency->name);
                 }
-              echo render_input('currency_rate', '', $currency_rate, 'number', [], [], '', 'text-right'); 
+              echo render_input('currency_rate_visible', '', 1 / $currency_rate, 'number', [], [], '', 'text-right'); 
+              echo render_input('currency_rate', '', $currency_rate, 'hidden', [], [], '', 'text-right'); 
+
               ?>
             </div>
           </div>
@@ -410,6 +412,18 @@
                   <?php echo form_hidden('total_mn', ''); ?>
                 </td>
                 <td class="wh-subtotal">
+                </td>
+              </tr>
+              <tr id="" class="exchange-rate-block">
+                <td><span class="bold"><?php echo _l('exchange_rate'); ?> :</span>
+                </td>
+                <td class="wh-exchange-rate">
+                </td>
+              </tr>
+              <tr id="exchangeRateLast" class="exchange-rate-block">
+                <td><span class="bold"><?php echo _l('total_ils'); ?> :</span>
+                </td>
+                <td class="wh-after-conversion">
                 </td>
               </tr>
               

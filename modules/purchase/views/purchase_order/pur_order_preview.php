@@ -473,6 +473,15 @@
                      </div>
                      <div class="col-md-5 col-md-offset-7">
                         <table class="table text-right">
+                           <?php
+                              $symbol = $base_currency->symbol;
+                              $exchange_rate = 1;
+                              if ($estimate->currency_rate != 1) {
+                                 $symbol = "₪";
+                                 $exchange_rate = round(1 / $estimate->currency_rate, 2);
+
+                              } 
+                           ?>
                            <tbody>
                               <tr id="subtotal">
                                  <td><span class="bold"><?php echo _l('subtotal'); ?></span>
@@ -481,6 +490,23 @@
                                     <?php echo app_format_money($estimate->subtotal,$base_currency->symbol); ?>
                                  </td>
                               </tr>
+                              <?php if ($exchange_rate != 1) :
+                              ?>
+                              <tr id="">
+                                 <td><span class="bold"><?php echo _l('exchange_rate'); ?></span>
+                                 </td>
+                                 <td class="">
+                                    <?php echo app_format_money($exchange_rate,$symbol); ?>
+                                 </td>
+                              </tr>  <tr id="">
+                                 <td><span class="bold"><?php echo _l('total_ils'); ?></span>
+                                 </td>
+                                 <td class="">
+                                    <?php echo app_format_money($estimate->subtotal * $exchange_rate,$symbol); ?>
+                                 </td>
+                              </tr>
+                              <?php endif; ?>
+
 
                               <?php if($tax_data['preview_html'] != ''){
                                 echo pur_html_entity_decode($tax_data['preview_html']);
@@ -493,7 +519,7 @@
                                  <td><span class="bold"><?php echo _l('discount_total(money)'); ?></span>
                                  </td>
                                  <td class="subtotal">
-                                    <?php echo '-'.app_format_money(($estimate->discount_total + $item_discount), $base_currency->symbol); ?>
+                                    <?php echo '-'.app_format_money(($estimate->discount_total + $item_discount), $symbol); ?>
                                  </td>
                               </tr>
                               <?php } ?>
@@ -502,7 +528,7 @@
                                 <tr id="subtotal">
                                   <td><span class="bold"><?php echo _l('pur_shipping_fee'); ?></span></td>
                                   <td class="subtotal">
-                                    <?php echo app_format_money($estimate->shipping_fee, $base_currency->symbol); ?>
+                                    <?php echo app_format_money($estimate->shipping_fee, $symbol); ?>
                                   </td>
                                 </tr>
                               <?php } ?>
@@ -512,7 +538,7 @@
                                  <td><span class="bold"><?php echo _l('total'); ?></span>
                                  </td>
                                  <td class="subtotal bold">
-                                    <?php echo app_format_money($estimate->total, $base_currency->symbol); ?>
+                                    <?php echo app_format_money($estimate->total * $exchange_rate, $symbol); ?>
                                  </td>
                               </tr>
                            </tbody>

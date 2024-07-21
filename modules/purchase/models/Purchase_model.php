@@ -2186,7 +2186,7 @@ class Purchase_model extends App_Model
      * @return     boolean , int id purchase order
      */
     public function add_pur_order($data){
-
+        unset($data['currency_rate_visible']);
         unset($data['item_select']);
         unset($data['item_name']);
         unset($data['description']);
@@ -2382,7 +2382,7 @@ class Purchase_model extends App_Model
     public function update_pur_order($data, $id)
     {
         $affectedRows = 0;
-
+        unset($data['currency_rate_visible']);
         unset($data['item_select']);
         unset($data['item_name']);
         unset($data['description']);
@@ -4416,7 +4416,7 @@ class Purchase_model extends App_Model
         }
 
         $day = _d($pur_order->order_date);
-       
+
     $html = '';     
     $html .= '<table class="table">
         <tbody>
@@ -4463,7 +4463,13 @@ class Purchase_model extends App_Model
       </table>
       <br><br>
       ';
+      $symbol = $base_currency->symbol;
+      $exchange_rate = 1;
+      if ($pur_order->currency_rate != 1) {
+         $symbol = "₪";
+         $exchange_rate = round(1 / $pur_order->currency_rate, 2);
 
+      } 
       $html .=  '<table class="table purorder-item">
         <thead>
           <tr>
@@ -4518,7 +4524,24 @@ class Purchase_model extends App_Model
                   </tr>
                                   <tr><td colspan="2" style="border-top: 1px solid gray" width="100%"></td></tr>
 ';
-
+      if ($exchange_rate != 1) {
+          $html .= '<tr>
+                    <td>'._l('exchange_rate').' </td>
+                    <td class="subtotal" style="text-align:left">
+                    '.app_format_money($exchange_rate,$symbol).'
+                    </td>
+                </tr>
+                                <tr><td colspan="2" style="border-top: 1px solid gray" width="100%"></td></tr>
+            ';
+            $html .= '<tr>
+                <td>'._l('total_ils').' </td>
+                <td class="subtotal" style="text-align:left">
+                '.app_format_money($pur_order->subtotal * $exchange_rate,$symbol).'
+                </td>
+                </tr>
+                            <tr><td colspan="2" style="border-top: 1px solid gray" width="100%"></td></tr>
+                ';
+      }
       $html .= $tax_data['pdf_html'];
 
       if(($pur_order->discount_total + $item_discount) > 0){
@@ -4526,7 +4549,7 @@ class Purchase_model extends App_Model
                   <tr>
                      <td>'._l('discount_total(money)').'</td>
                      <td class="subtotal" style="text-align:left">
-                        '.app_format_money(($pur_order->discount_total + $item_discount), $base_currency->symbol).'
+                        '.app_format_money(($pur_order->discount_total + $item_discount), $symbol).'
                      </td>
                   </tr>
                                     <tr><td colspan="2" style="border-top: 1px solid gray" width="100%"></td></tr>
@@ -4538,7 +4561,7 @@ class Purchase_model extends App_Model
                   <tr>
                      <td>'._l('pur_shipping_fee').'</td>
                      <td class="subtotal"  style="text-align: left">
-                        '.app_format_money($pur_order->shipping_fee, $base_currency->symbol).'
+                        '.app_format_money($pur_order->shipping_fee, $symbol).'
                      </td>
                   </tr>
                                     <tr><td colspan="2" style="border-top: 1px solid gray" width="100%"></td></tr>
@@ -4547,7 +4570,7 @@ class Purchase_model extends App_Model
       $html .= '
                 <tr >
                     <td>'. _l('total').'</td>
-                     <td class="subtotal" style="text-align: left">'. app_format_money($pur_order->total, $base_currency->symbol).'</td>
+                     <td class="subtotal" style="text-align: left">'. app_format_money($pur_order->total * $exchange_rate, $symbol).'</td>
                 </tr>
                  <tr><td colspan="2" style="border-top: 1px solid gray" width="100%"></td></tr>
 ';
@@ -7759,12 +7782,20 @@ class Purchase_model extends App_Model
                         }
                     }
                 }
+                $symbol = $base_currency->name;
+                $exchange_rate = 1;
+                if ($order->currency_rate != 1) {
+                   $symbol = "ILS";
+                   $exchange_rate = round(1 / $order->currency_rate, 2);
+
+                } 
+         
 
      
 
-                $pdf_html .= '<tr id="subtotal"><td width="33%"></td><td>'.$tn.'</td><td>'.app_format_money($tax_val[$key], '').'</td></tr>';
-                $preview_html .= '<tr id="subtotal"><td>'.$tn.'</td><td>'.app_format_money($tax_val[$key], $base_currency->name).'</td><tr>';
-                $html .= '<tr class="tax-area_pr"><td>'.$tn.'</td><td width="65%">'.app_format_money($tax_val[$key], '').' '.($base_currency->name).'</td></tr>';
+                $pdf_html .= '<tr id="subtotal" ><td width="50%" >'.$tn.'</td><td width="50%" align="left">'.app_format_money($tax_val[$key] * $exchange_rate, $symbol).'</td></tr> <tr><td colspan="2" style="border-top: 1px solid gray" width="100%"></td></tr>';
+                $preview_html .= '<tr id="subtotal"><td>'.$tn.'</td><td>'.app_format_money($tax_val[$key] * $exchange_rate, $symbol).'</td><tr>';
+                $html .= '<tr class="tax-area_pr"><td>'.$tn.'</td><td width="65%">'.app_format_money($tax_val[$key] * $exchange_rate, '').' '.($symbol).'</td></tr>';
                 $tax_val_rs[] = $tax_val[$key];
             }
         }
