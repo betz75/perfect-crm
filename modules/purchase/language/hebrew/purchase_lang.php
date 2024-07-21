@@ -58,6 +58,8 @@ $lang['purchase_order'] = 'הזמנת רכש';
 $lang['discount(%)'] = 'הנחה';
 $lang['discount'] = 'הנחה';
 $lang['amount'] = 'סכום';
+$lang['exchange_rate'] = 'שער המרה';
+$lang['total_ils'] = 'סה"כ אחרי המרה';
 
 $lang['discount(money)'] = 'הנחה(כסף)';
 $lang['pur_order_name'] = 'שם הזמנת רכש';

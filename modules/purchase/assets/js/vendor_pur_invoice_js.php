@@ -662,15 +662,19 @@ function pur_get_item_row_template(name, item_name, description, quantity, unit_
   return d;
 }
 
-function format_money(total, excludeSymbol) {
+function format_money(total, excludeSymbol, optionalSymbol = null) {
 
-    if (typeof (excludeSymbol) != 'undefined' && excludeSymbol) {
-        return accounting.formatMoney(total, {
-            symbol: ''
-        });
-    }
-
-    return accounting.formatMoney(total);
+if (typeof (excludeSymbol) != 'undefined' && excludeSymbol) {
+    return accounting.formatMoney(total, {
+        symbol: ''
+    });
+}
+if (optionalSymbol) {
+  return accounting.formatMoney(total, {
+        symbol: optionalSymbol
+    });
+}
+return accounting.formatMoney(total);
 }
 
 function init_ajax_search(type, selector, server_data, url) {

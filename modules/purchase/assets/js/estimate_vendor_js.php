@@ -743,14 +743,18 @@ function init_ajax_search(type, selector, server_data, url) {
     }
 }
 
-function format_money(total, excludeSymbol) {
+function format_money(total, excludeSymbol, optionalSymbol = null) {
 
     if (typeof (excludeSymbol) != 'undefined' && excludeSymbol) {
         return accounting.formatMoney(total, {
             symbol: ''
         });
     }
-
+    if (optionalSymbol) {
+      return accounting.formatMoney(total, {
+            symbol: optionalSymbol
+        });
+    }
     return accounting.formatMoney(total);
 }
 

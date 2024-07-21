@@ -35,7 +35,9 @@ $(function(){
     $("body").on('change', 'select.taxes', function () {
       pur_calculate_total();
     });
-
+    $("body").on("change", "#currency_rate_visible", function () {
+      $('input[name="currency_rate"]').val(1 / $(this).val()).change();
+    })
     $("body").on('change', 'select[name="currency"]', function () {
       var currency_id = $(this).val();
       if(currency_id != ''){
@@ -45,7 +47,7 @@ $(function(){
             $('#currency_rate_div').removeClass('hide');
 
             $('input[name="currency_rate"]').val(response.currency_rate).change();
-
+            $("#currency_rate_visible").val(Math.round(1 / response.currency_rate * 100) / 100);
             $('#convert_str').html(response.convert_str);
             $('.th_currency').html(response.currency_name);
           }else{
@@ -72,7 +74,8 @@ $(function(){
           $(this).find('td.rate input[type="number"]').val(accounting.toFixed(new_price, app.options.decimal_places)).change();
 
         });
-    });
+        $("#currency_rate_visible").val(Math.round(1 / currency_rate * 100) / 100);
+      });
 
 
      $("body").on("change", 'select[name="discount_type"]', function () {
@@ -256,7 +259,7 @@ function pur_calculate_total(from_discount_money){
     total_discount_calculated = 0,
     item_total_payment,
     rows = $('.table.has-calculations tbody tr.item'),
-    subtotal_area = $('#subtotal'),
+    subtotal_area = $('#exchangeRateLast'),
     discount_area = $('#discount_area'),
     adjustment = $('input[name="adjustment"]').val(),
     // discount_percent = $('input[name="discount_percent"]').val(),
@@ -266,8 +269,10 @@ function pur_calculate_total(from_discount_money){
     discount_type = $('select[name="discount_type"]').val(),
     additional_discount = $('input[name="additional_discount"]').val(),
     add_discount_type = $('select[name="add_discount_type"]').val();
-
+    var exchangeRate = $("#currency_rate_visible:visible").length ? $("#currency_rate_visible:visible").val() : 1;
+    var optionalSymbol =$("#currency_rate_visible:visible").length ? "₪" : null;
     var shipping_fee = $('input[name="shipping_fee"]').val();
+    $(".wh-exchange-rate").text(format_money(exchangeRate, false, optionalSymbol));
     if(shipping_fee == ''){
       shipping_fee = 0;
       $('input[name="shipping_fee"]').val(0);
@@ -419,7 +424,7 @@ function pur_calculate_total(from_discount_money){
 
     total += total_tax;
     total_tax_money += total_tax;
-    total_tax = format_money(total_tax);
+    total_tax = format_money(total_tax * exchangeRate, false, optionalSymbol);
     $('#tax_id_' + slugify(taxname)).html(total_tax);
   });
 
@@ -449,16 +454,17 @@ function pur_calculate_total(from_discount_money){
 
   total+= parseFloat(shipping_fee);
 
-  var discount_html = '-' + format_money(parseFloat(total_discount_calculated)+ parseFloat(additional_discount));
+  var discount_html = '-' + format_money(parseFloat(total_discount_calculated)+ parseFloat(additional_discount), false, optionalSymbol);
     $('input[name="discount_total"]').val(accounting.toFixed(total_discount_calculated, app.options.decimal_places));
-    
+    $(".wh-after-conversion").text(format_money(subtotal * exchangeRate, false, optionalSymbol));
+
   // Append, format to html and display
-  $('.shiping_fee').html(format_money(shipping_fee));
-  $('.order_discount_value').html(format_money(order_discount_percent_val));
+  $('.shiping_fee').html(format_money(shipping_fee, false, optionalSymbol));
+  $('.order_discount_value').html(format_money(order_discount_percent_val, false, optionalSymbol));
   $('.wh-total_discount').html(discount_html + hidden_input('dc_total', accounting.toFixed(order_discount_percent_val, app.options.decimal_places))  );
-  $('.adjustment').html(format_money(adjustment));
+  $('.adjustment').html(format_money(adjustment, false, optionalSymbol));
   $('.wh-subtotal').html(format_money(subtotal) + hidden_input('total_mn', accounting.toFixed(subtotal, app.options.decimal_places)));
-  $('.wh-total').html(format_money(total) + hidden_input('grand_total', accounting.toFixed(total, app.options.decimal_places)));
+  $('.wh-total').html(format_money(total* exchangeRate, false, optionalSymbol) + hidden_input('grand_total', accounting.toFixed(total, app.options.decimal_places) ));
 
   $(document).trigger('purchase-quotation-total-calculated');
 
@@ -639,6 +645,7 @@ function pur_get_item_row_template(name, item_name, description, quantity, unit_
 
 // Set the currency for accounting
 function init_po_currency(id, callback) {
+
     var $accountingTemplate = $("body").find('.accounting-template');
 
     if ($accountingTemplate.length || id) {
