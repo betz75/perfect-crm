@@ -196,7 +196,7 @@
                                     <span class="bold tw-text-neutral-700"><?php echo _l('invoice_subtotal'); ?></span>
                                 </td>
                                 <td class="subtotal">
-                                    <?php echo e(app_format_money($invoice->subtotal, $$currency)); ?>
+                                    <?php echo e(app_format_money($invoice->subtotal, $currency)); ?>
                                 </td>
                             </tr>
                             <?php if (is_sale_discount_applied($invoice)) { ?>
@@ -225,7 +225,7 @@
                                         </span>
                                     </td>
                                     <td class="adjustment">
-                                        <?php echo e(app_format_money($invoice->adjustment, $$currency)); ?>
+                                        <?php echo e(app_format_money($invoice->adjustment, $currency)); ?>
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -234,7 +234,7 @@
                                     <span class="bold tw-text-neutral-700"><?php echo _l('invoice_total'); ?></span>
                                 </td>
                                 <td class="total">
-                                    <?php echo e(app_format_money($invoice->total, $$currency)); ?>
+                                    <?php echo e(app_format_money($invoice->total, $currency)); ?>
                                 </td>
                             </tr>
                             <?php if (count($invoice->payments) > 0 && get_option('show_total_paid_on_invoice') == 1) { ?>
